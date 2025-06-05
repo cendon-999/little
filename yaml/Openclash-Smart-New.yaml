@@ -38,7 +38,7 @@ proxy-providers:
     proxy: 直连
   自建:
     <<: *PProviders
-    proxy: "🟢 直连"
+    proxy: "直连"
     url: "机场订阅地址4"
     override:
       additional-prefix: '[自建]'
