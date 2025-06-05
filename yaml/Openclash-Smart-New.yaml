@@ -6,7 +6,7 @@
 # 注意规则在满足自己需求情况下，尽量做到精简，不要过度复杂，以免影响性能。
 # ⭐️⭐️如果遇到无法识别smart策略组则，需要更新openclash内核才能使用此配置。SSH连接OpenWrt后，输入下方内容，然后手动更新。注意手动更新后，，不要在openclash再次更新内核。
 # wget -O smartcore.sh --no-check-certificate https://github.com/666OS/YYDS/raw/main/JS/smartcore.sh && chmod +x smartcore.sh && ./smartcore.sh
-
+PProviders: &PProviders {type: http, interval: 86400, health-check: {enable: true, url: 'https://www.apple.com/library/test/success.html', interval: 300}, filter: '^(?!.*(拒绝|直连|群|邀请|返利|循环|官网|客服|网站|网址|获取|订阅|流量|到期|机场|下次|版本|官址|备用|过期|已用|联系|邮箱|工单|贩卖|通知|倒卖|防止|国内|地址|频道|无法|说明|提示|特别|访问|支持|教程|关注|更新|作者|加入|USE|USED|TOTAL|EXPIRE|EMAIL|Panel|Channel|Author|traffic))'}
 # 机场订阅
 proxy-providers:
   机场A:
@@ -36,6 +36,14 @@ proxy-providers:
       url: https://www.gstatic.com/generate_204
       interval: 300
     proxy: 直连
+  自建:
+    <<: *PProviders
+    proxy: "🟢 直连"
+    url: "机场订阅地址4"
+    override:
+      additional-prefix: '[自建]'
+      skip-cert-verify: true
+      udp: true
 
 # 节点信息
 proxies:
