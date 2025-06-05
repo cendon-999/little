@@ -165,7 +165,7 @@ proxy-groups:
   - {name: 🔒 美国-稳定IP, type: fallback, tolerance: 30, interval: 150, lazy: false, proxies: [🇺🇲 美国节点, ⭐ 美国智能] }
   - {name: 🔒 新国-稳定IP, type: fallback, tolerance: 30, interval: 150, lazy: false, proxies: [🇸🇬 新国节点, ⭐ 新国智能] }
   - {name: 🔒 韩国-稳定IP, type: fallback, tolerance: 30, interval: 150, lazy: false, proxies: [🇰🇷 韩国节点, ⭐ 韩国智能] }
-  - {name: 🔒 英国-稳定IP, type: fallback, tolerance: 30, interval: 150, lazy: false, proxies: [🇰🇷 韩国节点, ⭐ 英国智能] }
+  - {name: 🔒 英国-稳定IP, type: fallback, tolerance: 30, interval: 150, lazy: false, proxies: [🇬🇧 英国节点, ⭐ 英国智能] }
 
   - {name: 🌍 其他节点, type: select, include-all: true, filter: "^((?!(直连|拒绝|广港|香港|HK|Hong Kong|🇭🇰|HongKong|广台|台湾|台灣|TW|Tai Wan|🇹🇼|🇨🇳|TaiWan|Taiwan|广日|日本|JP|川日|东京|大阪|泉日|埼玉|沪日|深日|🇯🇵|Japan|广新|新加坡|SG|坡|狮城|🇸🇬|Singapore|广韩|韩国|韓國|KR|首尔|春川|🇰🇷|Korea|广美|美|US|纽约|波特兰|达拉斯|俄勒|凤凰城|费利蒙|拉斯|洛杉|圣何塞|圣克拉|西雅|芝加|🇺🇸|United States|英国|UK|United Kingdom|伦敦|英|London|🇬🇧)).)*$"}
   - {name: 🌐 全部节点, type: select, include-all: true}
