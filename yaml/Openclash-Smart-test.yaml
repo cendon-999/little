@@ -15,15 +15,32 @@ PProviders: &PProviders {type: http, interval: 86400, health-check: {enable: tru
 
 # 机场订阅
 proxy-providers:
-  聚合机场-A:
-    url: "填入机场订阅链接 或者sub-store转换合并后的订阅链接"
-    type: http
-    interval: 86400
-    health-check:
-      enable: true
-      url: https://www.gstatic.com/generate_204
-      interval: 300
-    proxy: 直连
+  Airport_01:
+    <<: *PProviders
+    proxy: "直连"
+    url: "订阅链接1"
+    override:
+      # additional-prefix: '[机场名称1]'
+      skip-cert-verify: true
+      udp: true
+  Airport_02:
+    <<: *PProviders
+    proxy: "直连"
+    url: "订阅链接2"
+    override:
+      # additional-prefix: '[机场名称2]'
+      skip-cert-verify: true
+      udp: true
+  自建:
+    <<: *PProviders
+    proxy: "直连"
+    url: "订阅链接3" # <-- 请将这里替换为您的自建节点订阅地址
+    override:
+      # 将此订阅的所有节点名称前统一加上 [自建] 前缀
+      additional-prefix: '[自建]'
+      skip-cert-verify: true
+      udp: true
+
 # 多机场复制上方内容后改名字和url订阅链接即可,不能重复名字。
 
 # 节点信息
@@ -67,8 +84,18 @@ dns:
   ipv6: true
   enhanced-mode: fake-ip
   fake-ip-range: 198.20.0.1/16
+  default-nameserver:
+    - 202.103.24.68
+    - 202.103.44.150
+  proxy-server-nameserver:
+    - quic://dns.alidns.com/dns-query
+    - https://sm2.doh.pub/dns-query
+  direct-nameserver:
+    - quic://dns.alidns.com/dns-query
+    - https://sm2.doh.pub/dns-query
   nameserver:
-    - 223.5.5.5
+    - https://dns.google/dns-query
+    - https://dns.cloudflare.com/dns-query
   fake-ip-filter:
     - +.qeayr.cn
     - +.saojc.xyz
