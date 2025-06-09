@@ -36,7 +36,7 @@ proxy-providers:
     url: "订阅链接3" # <-- 请将这里替换为您的自建节点订阅地址
     override:
       # 将此订阅的所有节点名称前统一加上 [自建] 前缀
-      # additional-prefix: '[自建]'
+       additional-prefix: '[自建]'
       skip-cert-verify: true
       udp: true
 
