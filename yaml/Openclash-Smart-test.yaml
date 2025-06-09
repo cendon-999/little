@@ -170,7 +170,7 @@ proxy-groups:
   - {name: ♻️ 台湾自动, type: url-test, include-all: true, tolerance: 20, interval: 300, filter: "(?=.*(台|TW|(?i)Taiwan))^((?!(港|日|韩|新|美)).)*$"}
   - {name: ♻️ 欧盟自动, type: url-test, include-all: true, tolerance: 20, interval: 300, filter: "(?i)欧盟|EU|英国|UK|俄罗斯|RU|德国|DE|法国|FR|意大利|IT|西班牙|ES|荷兰|NL|瑞典|SE|波兰|PL|爱尔兰|IE|比利时|BE|奥地利|AT|芬兰|FI|丹麦|DK|葡萄牙|PT|英|United Kingdom|Germany|France|Italy|Spain|Netherlands|Sweden|Poland|Ireland|Belgium|Austria|Finland|Denmark|Portugal|Russia|法兰克福|Frankfurt|巴黎|Paris|阿姆斯特丹|Amsterdam|伦敦|London"}
   - {name: ♻️ 自动选择, type: url-test, include-all: true, tolerance: 20, interval: 300, filter: "^((?!(直连)).)*$"}
-  - {name: 🇭🇰 香港节点, type: select, include-all: true, filter: "(?i)港|hk|hongkong|hong kong"}
+  - {name: 🇭🇰 香港节点, type: select, include-all: true, filter: "(?=.*(港|HK|(?i)Hong))^((?!(台|日|韩|新|深|美|德国|土耳其|英国|俄罗斯|摩尔多瓦)).)*$"}
   - {name: 🇯🇵 日本节点, type: select, include-all: true, filter: "(?=.*(日|JP|(?i)Japan))^((?!(港|台|韩|新|美|尼日利亚)).)*$"}
   - {name: 🇺🇲 美国节点, type: select, include-all: true, filter: "(?=.*(广美|美|USA|United States|纽约|波特兰|达拉斯|俄勒|凤凰城|费利蒙|拉斯|洛杉|圣何塞|圣克拉|西雅|芝加))(?=^(?!.*(亚美尼亚|Armenia|洪都拉斯)).*$).*$"}
   - {name: 🇸🇬 新国节点, type: select, include-all: true, filter: "(?=.*(广新|新加坡|SG|坡|狮城|🇸🇬|Singapore)).*$"}
