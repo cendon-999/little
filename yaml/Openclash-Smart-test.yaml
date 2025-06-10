@@ -8,9 +8,13 @@
 # wget -O smartcore.sh --no-check-certificate https://github.com/666OS/YYDS/raw/main/JS/smartcore.sh && chmod +x smartcore.sh && ./smartcore.sh
 # ⭐️⭐️smart策略组必须要需要模型，下载下放链接内Model.bin（打开链接往下拉能看到）文件放到OpenClash: (/etc/openclash/Model.bin)，nikki上传到/etc/nikki/run, 否则uselightgbm: true,collectdata: true, filter 智能策略组这两个参数改成false
 # https://github.com/vernesong/mihomo/releases
+
 # 锚点 - 远程订阅组
 PProviders: &PProviders {type: http, interval: 86400, health-check: {enable: true, url: 'https://www.apple.com/library/test/success.html', interval: 300}, filter: '^(?!.*(拒绝|直连|群|邀请|返利|循环|官网|客服|网站|网址|获取|订阅|到期|机场|下次|版本|官址|备用|过期|已用|联系|邮箱|工单|贩卖|通知|倒卖|防止|国内|地址|频道|无法|说明|提示|特别|访问|支持|教程|关注|更新|作者|加入|USE|USED|TOTAL|EXPIRE|EMAIL|Panel|Channel|Author|traffic))'}
-#PProviders: &PProviders {type: http, interval: 86400, proxy: DIRECT, health-check: {enable: true, url: 'https://www.gstatic.com/generate_204', interval: 600}, filter: '^(?!.*(群|邀请|返利|循环|官网|客服|网站|网址|获取|订阅|到期|机场|下次|版本|官址|备用|过期|已用|联系|邮箱|工单|贩卖|通知|倒卖|防止|国内|地址|频道|无法|说明|使用|提示|特别|访问|支持|教程|关注|更新|作者|加入|USE|USED|TOTAL|EXPIRE|EMAIL|Panel|Channel|Author))'}
+
+# 锚点 - 智能策略组通用模板 (MODIFIED)
+Smart: &Smart {type: smart, include-all: true, tolerance: 20, interval: 300, uselightgbm: true, collectdata: true, url: 'http://www.gstatic.com/generate_204', lazy: true, persistent: true, disable-udp: false}
+
 
 # 机场订阅
 proxy-providers:
@@ -155,13 +159,31 @@ proxy-groups:
   - {name: 🔯 韩国故转, type: fallback, include-all: true, tolerance: 20, interval: 300, filter: "(?=.*(广韩|韩国|韓國|KR|首尔|春川|🇰🇷|Korea)).*$"}
   - {name: 🔯 台湾故转, type: fallback, include-all: true, tolerance: 20, interval: 300, filter: "(?=.*(台|TW|(?i)Taiwan))^((?!(港|日|韩|新|美)).)*$"}
   - {name: 🔯 欧盟故转, type: fallback, include-all: true, tolerance: 20, interval: 300, filter: "(?i)欧盟|EU|英国|UK|俄罗斯|RU|德国|DE|法国|FR|意大利|IT|西班牙|ES|荷兰|NL|瑞典|SE|波兰|PL|爱尔兰|IE|比利时|BE|奥地利|AT|芬兰|FI|丹麦|DK|葡萄牙|PT|英|United Kingdom|Germany|France|Italy|Spain|Netherlands|Sweden|Poland|Ireland|Belgium|Austria|Finland|Denmark|Portugal|Russia|法兰克福|Frankfurt|巴黎|Paris|阿姆斯特丹|Amsterdam|伦敦|London"}
-  - {name: ⭐ 香港智能, type: smart, include-all: true, tolerance: 20, interval: 300, uselightgbm: true,collectdata: true, filter: "(?=.*(港|HK|(?i)Hong))^((?!(台|日|韩|新|深|美|德国|土耳其|英国|俄罗斯|摩尔多瓦)).)*$", url: "http://www.gstatic.com/generate_204", lazy: true, persistent: true}
-  - {name: ⭐ 日本智能, type: smart, include-all: true, tolerance: 20, interval: 300, uselightgbm: true,collectdata: true, filter: "(?=.*(日|JP|(?i)Japan))^((?!(港|台|韩|新|美|尼日利亚)).)*$", url: "http://www.gstatic.com/generate_204", lazy: true, persistent: true}
-  - {name: ⭐ 美国智能, type: smart, include-all: true, tolerance: 20, interval: 300, uselightgbm: true,collectdata: true, filter: "(?=.*(广美|美|USA|United States|纽约|波特兰|达拉斯|俄勒|凤凰城|费利蒙|拉斯|洛杉|圣何塞|圣克拉|西雅|芝加))(?=^(?!.*(亚美尼亚|Armenia|洪都拉斯)).*$).*$", url: "http://www.gstatic.com/generate_204", lazy: true, persistent: true}
-  - {name: ⭐ 新国智能, type: smart, include-all: true, tolerance: 20, interval: 300, uselightgbm: true,collectdata: true, filter: "(?=.*(广新|新加坡|SG|坡|狮城|🇸🇬|Singapore)).*$", url: "http://www.gstatic.com/generate_204", lazy: true, persistent: true}
-  - {name: ⭐ 韩国智能, type: smart, include-all: true, tolerance: 20, interval: 300, uselightgbm: true,collectdata: true, filter: "(?=.*(广韩|韩国|韓國|KR|首尔|春川|🇰🇷|Korea)).*$", url: "http://www.gstatic.com/generate_204", lazy: true, persistent: true}
-  - {name: ⭐ 台湾智能, type: smart, include-all: true, tolerance: 20, interval: 300, uselightgbm: true,collectdata: true, filter: "(?=.*(台|TW|(?i)Taiwan))^((?!(港|日|韩|新|美)).)*$", url: "http://www.gstatic.com/generate_204", lazy: true, persistent: true}
-  - {name: ⭐ 欧盟智能, type: smart, include-all: true, tolerance: 20, interval: 300, uselightgbm: true,collectdata: true, filter: "(?i)欧盟|EU|英国|UK|俄罗斯|RU|德国|DE|法国|FR|意大利|IT|西班牙|ES|荷兰|NL|瑞典|SE|波兰|PL|爱尔兰|IE|比利时|BE|奥地利|AT|芬兰|FI|丹麦|DK|葡萄牙|PT|英|United Kingdom|Germany|France|Italy|Spain|Netherlands|Sweden|Poland|Ireland|Belgium|Austria|Finland|Denmark|Portugal|Russia|法兰克福|Frankfurt|巴黎|Paris|阿姆斯特丹|Amsterdam|伦敦|London", url: "http://www.gstatic.com/generate_204", lazy: true, persistent: true}
+  
+  # --- MODIFIED SMART GROUPS START ---
+  - name: ⭐ 香港智能
+    <<: *Smart
+    filter: "(?=.*(港|HK|(?i)Hong))^((?!(台|日|韩|新|深|美|德国|土耳其|英国|俄罗斯|摩尔多瓦)).)*$"
+  - name: ⭐ 日本智能
+    <<: *Smart
+    filter: "(?=.*(日|JP|(?i)Japan))^((?!(港|台|韩|新|美|尼日利亚)).)*$"
+  - name: ⭐ 美国智能
+    <<: *Smart
+    filter: "(?=.*(广美|美|USA|United States|纽约|波特兰|达拉斯|俄勒|凤凰城|费利蒙|拉斯|洛杉|圣何塞|圣克拉|西雅|芝加))(?=^(?!.*(亚美尼亚|Armenia|洪都拉斯)).*$).*$"
+  - name: ⭐ 新国智能
+    <<: *Smart
+    filter: "(?=.*(广新|新加坡|SG|坡|狮城|🇸🇬|Singapore)).*$"
+  - name: ⭐ 韩国智能
+    <<: *Smart
+    filter: "(?=.*(广韩|韩国|韓國|KR|首尔|春川|🇰🇷|Korea)).*$"
+  - name: ⭐ 台湾智能
+    <<: *Smart
+    filter: "(?=.*(台|TW|(?i)Taiwan))^((?!(港|日|韩|新|美)).)*$"
+  - name: ⭐ 欧盟智能
+    <<: *Smart
+    filter: "(?i)欧盟|EU|英国|UK|俄罗斯|RU|德国|DE|法国|FR|意大利|IT|西班牙|ES|荷兰|NL|瑞典|SE|波兰|PL|爱尔兰|IE|比利时|BE|奥地利|AT|芬兰|FI|丹麦|DK|葡萄牙|PT|英|United Kingdom|Germany|France|Italy|Spain|Netherlands|Sweden|Poland|Ireland|Belgium|Austria|Finland|Denmark|Portugal|Russia|法兰克福|Frankfurt|巴黎|Paris|阿姆斯特丹|Amsterdam|伦敦|London"
+  # --- MODIFIED SMART GROUPS END ---
+  
   - {name: ♻️ 香港自动, type: url-test, include-all: true, tolerance: 20, interval: 300, filter: "(?=.*(港|HK|(?i)Hong))^((?!(台|日|韩|新|深|美|德国|土耳其|英国|俄罗斯|摩尔多瓦)).)*$"}
   - {name: ♻️ 日本自动, type: url-test, include-all: true, tolerance: 20, interval: 300, filter: "(?=.*(日|JP|(?i)Japan))^((?!(港|台|韩|新|美|尼日利亚)).)*$" }
   - {name: ♻️ 美国自动, type: url-test, include-all: true, tolerance: 20, interval: 300, filter: "(?=.*(广美|美|USA|United States|纽约|波特兰|达拉斯|俄勒|凤凰城|费利蒙|拉斯|洛杉|圣何塞|圣克拉|西雅|芝加))(?=^(?!.*(亚美尼亚|Armenia|洪都拉斯)).*$).*$"}
@@ -270,3 +292,4 @@ rule-providers:
   telegram_ip: { <<: *ip, url: "https://github.moeyy.xyz/https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geoip/telegram.mrs"}
   netflix_ip: { <<: *ip, url: "https://github.moeyy.xyz/https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geoip/netflix.mrs"}
   fakeip_filter_domain: { <<: *domain, url: "https://raw.githubusercontent.com/Lanlan13-14/Rules/refs/heads/main/rules/Domain/fakeip-filter.mrs" }
+  
