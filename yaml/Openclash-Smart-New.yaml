@@ -157,15 +157,15 @@ proxy-groups:
   - {name: 🐟 漏网之鱼, type: select, proxies: [🚀 默认代理, 🔯 香港故转, 🔯 日本故转, 🔯 美国故转, 🔯 新国故转, 🔯 韩国故转, 🔯 欧盟故转, ⭐ 香港智能, ⭐ 日本智能, ⭐ 美国智能, ⭐ 新国智能, ⭐ 韩国智能, ⭐ 欧盟智能, 🇭🇰 香港节点, 🇯🇵 日本节点, 🇸🇬 新国节点, 🇺🇲 美国节点, 🇰🇷 韩国节点, 🇪🇺 欧盟节点, 🔒 港区-稳定IP, 🔒 日本-稳定IP, 🔒 美国-稳定IP, 🔒 新国-稳定IP, 🔒 韩国-稳定IP, 🔒 欧盟-稳定IP, 🏠 自建/家宽节点], include-all: true}
 
   # --- MODIFIED FALLBACK GROUPS START ---
- # 🔯 故转策略组现在作为 fallback 类型，明确包含区域节点组和负载均衡策略组 (不含智能组)
-- {name: 🔯 香港故转, type: fallback, proxies: [🇭🇰 香港节点, ➡️ 香港均衡-散列, ➡️ 香港均衡-轮询], url: 'http://www.gstatic.com/generate_204', interval: 300, tolerance: 20, lazy: false, icon: "https://git.imee.me/https://github.com/Koolson/Qure/raw/master/IconSet/Color/HK.png"}
-- {name: 🔯 日本故转, type: fallback, proxies: [🇯🇵 日本节点, ➡️ 日本均衡-散列, ➡️ 日本均衡-轮询], url: 'http://www.gstatic.com/generate_204', interval: 300, tolerance: 20, lazy: false, icon: "https://git.imee.me/https://github.com/Koolson/Qure/raw/master/IconSet/Color/JP.png"}
-- {name: 🔯 美国故转, type: fallback, proxies: [🇺🇲 美国节点, ➡️ 美国均衡-散列, ➡️ 美国均衡-轮询], url: 'http://www.gstatic.com/generate_204', interval: 300, tolerance: 20, lazy: false, icon: "https://git.imee.me/https://github.com/Koolson/Qure/raw/master/IconSet/Color/US.png"}
-- {name: 🔯 新国故转, type: fallback, proxies: [🇸🇬 新国节点, ➡️ 新国均衡-散列, ➡️ 新国均衡-轮询], url: 'http://www.gstatic.com/generate_204', interval: 300, tolerance: 20, lazy: false, icon: "https://git.imee.me/https://github.com/Koolson/Qure/raw/master/IconSet/Color/SG.png"}
-- {name: 🔯 韩国故转, type: fallback, proxies: [🇰🇷 韩国节点, ➡️ 韩国均衡-散列, ➡️ 韩国均衡-轮询], url: 'http://www.gstatic.com/generate_204', interval: 300, tolerance: 20, lazy: false, icon: "https://git.imee.me/https://github.com/Koolson/Qure/raw/master/IconSet/Color/KR.png"}
-- {name: 🔯 台湾故转, type: fallback, proxies: [🇹🇼 台湾节点, ➡️ 台湾均衡-散列, ➡️ 台湾均衡-轮询], url: 'http://www.gstatic.com/generate_204', interval: 300, tolerance: 20, lazy: false, icon: "https://git.imee.me/https://github.com/Koolson/Qure/raw/master/IconSet/Color/TW.png"}
-- {name: 🔯 欧盟故转, type: fallback, proxies: [🇪🇺 欧盟节点, ➡️ 欧盟均衡-散列, ➡️ 欧盟均衡-轮询], url: 'http://www.gstatic.com/generate_204', interval: 300, tolerance: 20, lazy: false, icon: "https://git.imee.me/https://github.com/Koolson/Qure/raw/master/IconSet/Color/EU.png"}
-# --- MODIFIED FALLBACK GROUPS END ---
+ # 🔯 故转策略组现在作为 select 类型，只包含负载均衡策略组
+  - {name: 🔯 香港故转, type: select, proxies: [➡️ 香港均衡-散列, ➡️ 香港均衡-轮询]}
+  - {name: 🔯 日本故转, type: select, proxies: [➡️ 日本均衡-散列, ➡️ 日本均衡-轮询]}
+  - {name: 🔯 美国故转, type: select, proxies: [➡️ 美国均衡-散列, ➡️ 美国均衡-轮询]}
+  - {name: 🔯 新国故转, type: select, proxies: [➡️ 新国均衡-散列, ➡️ 新国均衡-轮询]}
+  - {name: 🔯 韩国故转, type: select, proxies: [➡️ 韩国均衡-散列, ➡️ 韩国均衡-轮询]}
+  - {name: 🔯 台湾故转, type: select, proxies: [➡️ 台湾均衡-散列, ➡️ 台湾均衡-轮询]}
+  - {name: 🔯 欧盟故转, type: select, proxies: [➡️ 欧盟均衡-散列, ➡️ 欧盟均衡-轮询]}
+  # --- MODIFIED FALLBACK GROUPS END ---
 
   # --- MODIFIED SMART GROUPS START ---
   - {name: ⭐ 香港智能, <<: *Smart, filter: "(?=.*(港|HK|(?i)Hong))^((?!(台|日|韩|新|深|美|德国|土耳其|英国|俄罗斯|摩尔多瓦)).)*$"}
