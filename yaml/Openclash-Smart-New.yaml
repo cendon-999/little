@@ -1,4 +1,4 @@
-# 七尺宇 + 安格世界 ， C❄️ OpenClash配置整合-13 , 2025-6-1
+# 七尺宇 + 安格世界 ， C❄️ OpenClash配置整合-14 , 2025-6-8
 # 七尺宇https://www.youtube.com/@qichiyu
 # 安格世界https://www.youtube.com/@Ange-Digital-Life
 # openclash设置和配置教程参：https://www.youtube.com/watch?v=S2l_0g4EOHk&t
@@ -6,51 +6,65 @@
 # 注意规则在满足自己需求情况下，尽量做到精简，不要过度复杂，以免影响性能。
 # ⭐️⭐️如果遇到无法识别smart策略组则，需要更新openclash内核才能使用此配置。SSH连接OpenWrt后，输入下方内容，然后手动更新。注意手动更新后，，不要在openclash再次更新内核。
 # wget -O smartcore.sh --no-check-certificate https://github.com/666OS/YYDS/raw/main/JS/smartcore.sh && chmod +x smartcore.sh && ./smartcore.sh
+# ⭐️⭐️smart策略组必须要需要模型，下载下放链接内Model.bin（打开链接往下拉能看到）文件放到OpenClash: (/etc/openclash/Model.bin)，nikki上传到/etc/nikki/run, 否则uselightgbm: true,collectdata: true, filter 智能策略组这两个参数改成false
+# https://github.com/vernesong/mihomo/releases
+
+# 锚点 - 远程订阅组
+PProviders: &PProviders {type: http, interval: 86400, health-check: {enable: true, url: 'https://www.apple.com/library/test/success.html', interval: 300}, filter: '^(?!.*(拒绝|直连|群|邀请|返利|循环|官网|客服|网站|网址|获取|订阅|到期|机场|下次|版本|官址|备用|过期|已用|联系|邮箱|工单|贩卖|通知|倒卖|防止|国内|地址|频道|无法|说明|提示|特别|访问|支持|教程|关注|更新|作者|加入|USE|USED|TOTAL|EXPIRE|EMAIL|Panel|Channel|Author|traffic))'}
+
+# 锚点 - 智能策略组通用模板 (MODIFIED)
+Smart: &Smart {type: smart, include-all: true, tolerance: 20, interval: 300, uselightgbm: true, collectdata: true, url: 'http://www.gstatic.com/generate_204', lazy: true, persistent: true, disable-udp: false}
+
+# 锚点 - 负载均衡策略组通用模板 (NEW)
+LoadBalanceCH: &LoadBalanceCH {type: load-balance, interval: 60, lazy: true, url: 'https://www.gstatic.com/generate_204', disable-udp: false, strategy: consistent-hashing, timeout: 2000, max-failed-times: 3, hidden: true, include-all: true}
+LoadBalanceCR: &LoadBalanceCR {type: load-balance, interval: 60, lazy: true, url: 'https://www.gstatic.com/generate_204', disable-udp: false, strategy: round-robin, timeout: 2000, max-failed-times: 3, hidden: true, include-all: true}
 
 # 机场订阅
 proxy-providers:
-  机场A:
-    url: "机场订阅地址1"
-    type: http
-    interval: 86400
-    health-check:
-      enable: true
-      url: https://www.gstatic.com/generate_204
-      interval: 300
-    proxy: 直连
-  机场B:
-    url: "机场订阅地址2"
-    type: http
-    interval: 86400
-    health-check:
-      enable: true
-      url: https://www.gstatic.com/generate_204
-      interval: 300
-    proxy: 直连
+  Airport_01:
+    <<: *PProviders
+    proxy: "直连"
+    url: "订阅链接1"
+    override:
+      # additional-prefix: '[机场名称1]'
+      skip-cert-verify: true
+      udp: true
+  Airport_02:
+    <<: *PProviders
+    proxy: "直连"
+    url: "订阅链接2"
+    override:
+      # additional-prefix: '[机场名称2]'
+      skip-cert-verify: true
+      udp: true
   自建:
-    url: "机场订阅地址3"
-    type: http
-    interval: 86400
-    health-check:
-      enable: true
-      url: https://www.gstatic.com/generate_204
-      interval: 300
-    proxy: 直连
+    <<: *PProviders
+    proxy: "直连"
+    url: "订阅链接3" # <-- 请将这里替换为您的自建节点订阅地址
+    override:
+      # 将此订阅的所有节点名称前统一加上 [自建] 前缀
+      additional-prefix: '[自建]'
+      skip-cert-verify: true
+      udp: true
+
+# 多机场复制上方内容后改名字和url订阅链接即可,不能重复名字。
 
 # 节点信息
 proxies:
   - {name: 直连, type: direct}
 
-# 全局配置 
+# 全局配置
 port: 7890
 socks-port: 7891
 redir-port: 7892
 mixed-port: 7893
 tproxy-port: 7895
 
+
 allow-lan: true
 mode: rule
 log-level: info
+
 
 ipv6: true
 
@@ -68,6 +82,7 @@ external-ui-name: zashboard
 external-ui-url: https://github.moeyy.xyz/https://github.com/Zephyruso/zashboard/archive/refs/heads/gh-pages.zip
 secret: "123456"
 
+
 # DNS模块
 dns:
   enable: true
@@ -80,7 +95,7 @@ dns:
     - 202.103.44.150
   proxy-server-nameserver:
     - quic://dns.alidns.com/dns-query
-    - https://sm2.doh.pub/dns-query 
+    - https://sm2.doh.pub/dns-query
   direct-nameserver:
     - quic://dns.alidns.com/dns-query
     - https://sm2.doh.pub/dns-query
@@ -90,14 +105,15 @@ dns:
   fake-ip-filter:
     - "rule-set:fakeip_filter_domain,private_domain,cn_domain,Sony_domain,Epic_domain,Blizzard_domain,Nintend_domain"
     - +.qeayr.cn
-    - +.saojc.xyz   
+    - +.saojc.xyz
     - +.sssyun.xyz
     - +.dler.cloud
-    - +.0tk8a3a1q4t94dler.com    
+    - +.0tk8a3a1q4t94dler.com
     - +.aerianas.top
     - +.26477414.i234.me
 
-# 入站  
+
+# 入站
 tun:
   enable: true
   stack: gvisor
@@ -112,12 +128,13 @@ profile:
   store-selected: true
   store-fake-ip: true
 
+
 # 出站策略
 # 注意锚点必须放在引用的上方，可以集中把锚点全部放yaml的顶部。
-pr: &pr {type: select, proxies: [🚀 默认代理, 🔯 香港故转, 🔯 日本故转, 🔯 美国故转, 🔯 新国故转, 🔯 韩国故转, 🔯 英国故转, 🔯 台湾故转, ⭐ 香港智能, ⭐ 日本智能, ⭐ 美国智能, ⭐ 新国智能, ⭐ 韩国智能, ⭐ 英国智能, ⭐ 台湾智能, ♻️ 香港自动, ♻️ 日本自动, ♻️ 美国自动, ♻️ 新国自动, ♻️ 韩国自动, ♻️ 英国自动, ♻️ 台湾自动, ♻️ 自动选择, 🇭🇰 香港节点, 🇯🇵 日本节点, 🇸🇬 新国节点, 🇺🇲 美国节点, 🇰🇷 韩国节点, 🇬🇧 英国节点, 🇹🇼 台湾节点, 🔒 港区-稳定IP, 🔒 日本-稳定IP, 🔒 美国-稳定IP, 🔒 新国-稳定IP, 🔒 韩国-稳定IP, 🔒 英国-稳定IP, 🔒 台湾-稳定IP, 🌍 其他节点, 🌐 全部节点, 直连]}
+pr: &pr {type: select, proxies: [🚀 默认代理, 🔯 香港故转, 🔯 日本故转, 🔯 美国故转, 🔯 新国故转, 🔯 韩国故转, 🔯 欧盟故转, ⭐ 香港智能, ⭐ 日本智能, ⭐ 美国智能, ⭐ 新国智能, ⭐ 韩国智能, ⭐ 欧盟智能, 🇭🇰 香港节点, 🇯🇵 日本节点, 🇸🇬 新国节点, 🇺🇲 美国节点, 🇰🇷 韩国节点, 🇪🇺 欧盟节点, 🔒 港区-稳定IP, 🔒 日本-稳定IP, 🔒 美国-稳定IP, 🔒 新国-稳定IP, 🔒 韩国-稳定IP, 🔒 欧盟-稳定IP, 🏠 自建/家宽节点, 🌍 其他节点, 🌐 全部节点, 直连]}
 proxy-groups:
-  - {name: 🚀 默认代理, type: select, proxies: [🔯 香港故转, 🔯 日本故转, 🔯 美国故转, 🔯 新国故转, 🔯 韩国故转, 🔯 英国故转, 🔯 台湾故转, ⭐ 香港智能, ⭐ 日本智能, ⭐ 美国智能, ⭐ 新国智能, ⭐ 韩国智能, ⭐ 英国智能, ⭐ 台湾智能, ♻️ 香港自动, ♻️ 日本自动, ♻️ 美国自动, ♻️ 新国自动, ♻️ 韩国自动, ♻️ 英国自动, ♻️ 台湾自动, ♻️ 自动选择, 🇭🇰 香港节点, 🇯🇵 日本节点, 🇸🇬 新国节点, 🇺🇲 美国节点, 🇰🇷 韩国节点, 🇬🇧 英国节点, 🇹🇼 台湾节点, 🔒 港区-稳定IP, 🔒 日本-稳定IP, 🔒 美国-稳定IP, 🔒 新国-稳定IP, 🔒 韩国-稳定IP, 🔒 英国-稳定IP, 🔒 台湾-稳定IP, 🌍 其他节点, 🌐 全部节点, 直连]}
-  - {name: 🤖 ChatGPT, <<: *pr}
+  - {name: 🚀 默认代理, type: select, proxies: [🔯 香港故转, 🔯 日本故转, 🔯 美国故转, 🔯 新国故转, 🔯 韩国故转, 🔯 欧盟故转, ⭐ 香港智能, ⭐ 日本智能, ⭐ 美国智能, ⭐ 新国智能, ⭐ 韩国智能, ⭐ 欧盟智能, 🇭🇰 香港节点, 🇯🇵 日本节点, 🇸🇬 新国节点, 🇺🇲 美国节点, 🇰🇷 韩国节点, 🇪🇺 欧盟节点, 🔒 港区-稳定IP, 🔒 日本-稳定IP, 🔒 美国-稳定IP, 🔒 新国-稳定IP, 🔒 韩国-稳定IP, 🔒 欧盟-稳定IP, 🏠 自建/家宽节点, 🌍 其他节点, 🌐 全部节点, 直连]}
+  - {name: 🤖 ChatGPT, type: select, proxies: [🚀 默认代理, 🔯 香港故转, 🔯 日本故转, 🔯 美国故转, 🔯 新国故转, 🔯 韩国故转, 🔯 欧盟故转, ⭐ 香港智能, ⭐ 日本智能, ⭐ 美国智能, ⭐ 新国智能, ⭐ 韩国智能, ⭐ 欧盟智能, 🇭🇰 香港节点, 🇯🇵 日本节点, 🇸🇬 新国节点, 🇺🇲 美国节点, 🇰🇷 韩国节点, 🇪🇺 欧盟节点, 🔒 港区-稳定IP, 🔒 日本-稳定IP, 🔒 美国-稳定IP, 🔒 新国-稳定IP, 🔒 韩国-稳定IP, 🔒 欧盟-稳定IP, 🏠 自建/家宽节点], include-all: true}
   - {name: 📲 Telegram, <<: *pr}
   - {name: 📹 YouTube, <<: *pr}
   - {name: 🍀 Google, <<: *pr}
@@ -129,6 +146,7 @@ proxy-groups:
   - {name: 🎥 NETFLIX, <<: *pr}
   - {name: 🏰 Disney, <<: *pr}
   - {name: 📺 HBO, <<: *pr}
+  - {name: 🎬 Emby, type: select, proxies: [🚀 默认代理, 🔯 香港故转, 🔯 日本故转, 🔯 美国故转, 🔯 新国故转, 🔯 韩国故转, 🔯 欧盟故转, ⭐ 香港智能, ⭐ 日本智能, ⭐ 美国智能, ⭐ 新国智能, ⭐ 韩国智能, ⭐ 欧盟智能, 🇭🇰 香港节点, 🇯🇵 日本节点, 🇸🇬 新国节点, 🇺🇲 美国节点, 🇰🇷 韩国节点, 🇪🇺 欧盟节点, 🔒 港区-稳定IP, 🔒 日本-稳定IP, 🔒 美国-稳定IP, 🔒 新国-稳定IP, 🔒 韩国-稳定IP, 🔒 欧盟-稳定IP, 🏠 自建/家宽节点], include-all: true}
   - {name: 💬 WhatsApp, <<: *pr}
   - {name: 🐬 OneDrive, <<: *pr}
   - {name: 🪟 Microsoft, <<: *pr}
@@ -136,50 +154,74 @@ proxy-groups:
   - {name: 💶 PayPal, <<: *pr}
   - {name: 🍎 Apple, type: select, proxies: [直连, 🚀 默认代理]}
   - {name: 🎯 直连, type: select, proxies: [直连, 🚀 默认代理]}
-  - {name: 🐟 漏网之鱼, <<: *pr}
-  - {name: 🔯 香港故转, type: fallback, include-all: true, tolerance: 20, interval: 300, filter: "(?=.*(港|HK|(?i)Hong))^((?!(台|日|韩|新|深|美)).)*$"}
-  - {name: 🔯 日本故转, type: fallback, include-all: true, tolerance: 20, interval: 300, filter: "(?=.*(日|JP|(?i)Japan))^((?!(港|台|韩|新|美)).)*$" }
-  - {name: 🔯 美国故转, type: fallback, include-all: true, tolerance: 20, interval: 300, filter: "(?=.*(广美|美|US|纽约|波特兰|达拉斯|俄勒|凤凰城|费利蒙|拉斯|洛杉|圣何塞|圣克拉|西雅|芝加|🇺🇸|United States)).*$"}
-  - {name: 🔯 新国故转, type: fallback, include-all: true, tolerance: 20, interval: 300, filter: "(?=.*(广新|新加坡|SG|坡|狮城|🇸🇬|Singapore)).*$"}
-  - {name: 🔯 韩国故转, type: fallback, include-all: true, tolerance: 20, interval: 300, filter: "(?=.*(广韩|韩国|韓國|KR|首尔|春川|🇰🇷|Korea)).*$"}
-  - {name: 🔯 英国故转, type: fallback, include-all: true, tolerance: 20, interval: 300, filter: "(?=.*(英国|英|伦敦|UK|United Kingdom|🇬🇧|London)).*$"}
-  - {name: 🔯 台湾故转, type: fallback, include-all: true, tolerance: 20, interval: 300, filter: "(?=.*(台|TW|(?i)Taiwan))^((?!(港|日|韩|新|美)).)*$"}
-  - {name: ⭐ 香港智能, type: smart, include-all: true, tolerance: 20, interval: 300, filter: "(?=.*(港|HK|(?i)Hong))^((?!(台|日|韩|新|深|美)).)*$", url: "http://www.gstatic.com/generate_204", lazy: true, persistent: true}
-  - {name: ⭐ 日本智能, type: smart, include-all: true, tolerance: 20, interval: 300, filter: "(?=.*(日|JP|(?i)Japan))^((?!(港|台|韩|新|美)).)*$", url: "http://www.gstatic.com/generate_204", lazy: true, persistent: true}
-  - {name: ⭐ 美国智能, type: smart, include-all: true, tolerance: 20, interval: 300, filter: "(?=.*(广美|美|US|纽约|波特兰|达拉斯|俄勒|凤凰城|费利蒙|拉斯|洛杉|圣何塞|圣克拉|西雅|芝加|🇺🇸|United States)).*$", url: "http://www.gstatic.com/generate_204", lazy: true, persistent: true}
-  - {name: ⭐ 新国智能, type: smart, include-all: true, tolerance: 20, interval: 300, filter: "(?=.*(广新|新加坡|SG|坡|狮城|🇸🇬|Singapore)).*$", url: "http://www.gstatic.com/generate_204", lazy: true, persistent: true}
-  - {name: ⭐ 韩国智能, type: smart, include-all: true, tolerance: 20, interval: 300, filter: "(?=.*(广韩|韩国|韓國|KR|首尔|春川|🇰🇷|Korea)).*$", url: "http://www.gstatic.com/generate_204", lazy: true, persistent: true}
-  - {name: ⭐ 英国智能, type: smart, include-all: true, tolerance: 20, interval: 300, filter: "(?=.*(英国|英|伦敦|UK|United Kingdom|🇬🇧|London)).*$", url: "http://www.gstatic.com/generate_204", lazy: true, persistent: true}
-  - {name: ⭐ 台湾智能, type: smart, include-all: true, tolerance: 20, interval: 300, filter: "(?=.*(台|TW|(?i)Taiwan))^((?!(港|日|韩|新|美)).)*$", url: "http://www.gstatic.com/generate_204", lazy: true, persistent: true}
-  - {name: ♻️ 香港自动, type: url-test, include-all: true, tolerance: 20, interval: 300, filter: "(?=.*(港|HK|(?i)Hong))^((?!(台|日|韩|新|深|美)).)*$"}
-  - {name: ♻️ 日本自动, type: url-test, include-all: true, tolerance: 20, interval: 300, filter: "(?=.*(日|JP|(?i)Japan))^((?!(港|台|韩|新|美)).)*$" }
-  - {name: ♻️ 美国自动, type: url-test, include-all: true, tolerance: 20, interval: 300, filter: "(?=.*(广美|美|US|纽约|波特兰|达拉斯|俄勒|凤凰城|费利蒙|拉斯|洛杉|圣何塞|圣克拉|西雅|芝加|🇺🇸|United States)).*$"}
-  - {name: ♻️ 新国自动, type: url-test, include-all: true, tolerance: 20, interval: 300, filter: "(?=.*(广新|新加坡|SG|坡|狮城|🇸🇬|Singapore)).*$"}
-  - {name: ♻️ 韩国自动, type: url-test, include-all: true, tolerance: 20, interval: 300, filter: "(?=.*(广韩|韩国|韓國|KR|首尔|春川|🇰🇷|Korea)).*$"}
-  - {name: ♻️ 英国自动, type: url-test, include-all: true, tolerance: 20, interval: 300, filter: "(?=.*(英国|英|伦敦|UK|United Kingdom|🇬🇧|London)).*$"}
-  - {name: ♻️ 台湾自动, type: url-test, include-all: true, tolerance: 20, interval: 300, filter: "(?=.*(台|TW|(?i)Taiwan))^((?!(港|日|韩|新|美)).)*$"}
-  - {name: ♻️ 自动选择, type: url-test, include-all: true, tolerance: 20, interval: 300, filter: "^((?!(直连)).)*$"}
-  - {name: 🇭🇰 香港节点, type: select, include-all: true, filter: "(?i)港|hk|hongkong|hong kong"}
-  - {name: 🇯🇵 日本节点, type: select, include-all: true, filter: "(?i)日|jp|japan"}
-  - {name: 🇺🇲 美国节点, type: select, include-all: true, filter: "(?=.*(广美|美|US|纽约|波特兰|达拉斯|俄勒|凤凰城|费利蒙|拉斯|洛杉|圣何塞|圣克拉|西雅|芝加|🇺🇸|United States)).*$"}
+  - {name: 🐟 漏网之鱼, type: select, proxies: [🚀 默认代理, 🔯 香港故转, 🔯 日本故转, 🔯 美国故转, 🔯 新国故转, 🔯 韩国故转, 🔯 欧盟故转, ⭐ 香港智能, ⭐ 日本智能, ⭐ 美国智能, ⭐ 新国智能, ⭐ 韩国智能, ⭐ 欧盟智能, 🇭🇰 香港节点, 🇯🇵 日本节点, 🇸🇬 新国节点, 🇺🇲 美国节点, 🇰🇷 韩国节点, 🇪🇺 欧盟节点, 🔒 港区-稳定IP, 🔒 日本-稳定IP, 🔒 美国-稳定IP, 🔒 新国-稳定IP, 🔒 韩国-稳定IP, 🔒 欧盟-稳定IP, 🏠 自建/家宽节点], include-all: true}
+
+  # --- MODIFIED FALLBACK GROUPS START ---
+  # 🔯 故转策略组现在作为 select 类型，只包含负载均衡策略组
+  - {name: 🔯 香港故转, type: select, proxies: [➡️ 香港均衡-散列, ➡️ 香港均衡-轮询]}
+  - {name: 🔯 日本故转, type: select, proxies: [➡️ 日本均衡-散列, ➡️ 日本均衡-轮询]}
+  - {name: 🔯 美国故转, type: select, proxies: [➡️ 美国均衡-散列, ➡️ 美国均衡-轮询]}
+  - {name: 🔯 新国故转, type: select, proxies: [➡️ 新国均衡-散列, ➡️ 新国均衡-轮询]}
+  - {name: 🔯 韩国故转, type: select, proxies: [➡️ 韩国均衡-散列, ➡️ 韩国均衡-轮询]}
+  - {name: 🔯 台湾故转, type: select, proxies: [➡️ 台湾均衡-散列, ➡️ 台湾均衡-轮询]}
+  - {name: 🔯 欧盟故转, type: select, proxies: [➡️ 欧盟均衡-散列, ➡️ 欧盟均衡-轮询]}
+  # --- MODIFIED FALLBACK GROUPS END ---
+
+  # --- MODIFIED SMART GROUPS START ---
+  - {name: ⭐ 香港智能, <<: *Smart, filter: "(?=.*(港|HK|(?i)Hong))^((?!(台|日|韩|新|深|美|德国|土耳其|英国|俄罗斯|摩尔多瓦)).)*$"}
+  - {name: ⭐ 日本智能, <<: *Smart, filter: "(?=.*(日|JP|(?i)Japan))^((?!(港|台|韩|新|美|尼日利亚)).)*$"}
+  - {name: ⭐ 美国智能, <<: *Smart, filter: "(?=.*(广美|美|USA|United States|纽约|波特兰|达拉斯|俄勒|凤凰城|费利蒙|拉斯|洛杉|圣何塞|圣克拉|西雅|芝加))(?=^(?!.*(亚美尼亚|Armenia|洪都拉斯)).*$).*$"}
+  - {name: ⭐ 新国智能, <<: *Smart, filter: "(?=.*(广新|新加坡|SG|坡|狮城|🇸🇬|Singapore)).*$"}
+  - {name: ⭐ 韩国智能, <<: *Smart, filter: "(?=.*(广韩|韩国|韓國|KR|首尔|春川|🇰🇷|Korea)).*$"}
+  - {name: ⭐ 台湾智能, <<: *Smart, filter: "(?=.*(台|TW|(?i)Taiwan))^((?!(港|日|韩|新|美)).)*$"}
+  - {name: ⭐ 欧盟智能, <<: *Smart, filter: "(?i)欧盟|EU|英国|UK|俄罗斯|RU|德国|DE|法国|FR|意大利|IT|西班牙|ES|荷兰|NL|瑞典|SE|波兰|PL|爱尔兰|IE|比利时|BE|奥地利|AT|芬兰|FI|丹麦|DK|葡萄牙|PT|英|United Kingdom|Germany|France|Italy|Spain|Netherlands|Sweden|Poland|Ireland|Belgium|Austria|Finland|Denmark|Portugal|Russia|法兰克福|Frankfurt|巴黎|Paris|阿姆斯特丹|Amsterdam|伦敦|London"}
+  # --- MODIFIED SMART GROUPS END ---
+
+  # ♻️ 自动选择 (url-test) 策略组已移除
+
+  - {name: 🇭🇰 香港节点, type: select, include-all: true, filter: "(?=.*(港|HK|(?i)Hong))^((?!(台|日|韩|新|深|美|德国|土耳其|英国|俄罗斯|摩尔多瓦)).)*$"}
+  - {name: 🇯🇵 日本节点, type: select, include-all: true, filter: "(?=.*(日|JP|(?i)Japan))^((?!(港|台|韩|新|美|尼日利亚)).)*$"}
+  - {name: 🇺🇲 美国节点, type: select, include-all: true, filter: "(?=.*(广美|美|USA|United States|纽约|波特兰|达拉斯|俄勒|凤凰城|费利蒙|拉斯|洛杉|圣何塞|圣克拉|西雅|芝加))(?=^(?!.*(亚美尼亚|Armenia|洪都拉斯)).*$).*$"}
   - {name: 🇸🇬 新国节点, type: select, include-all: true, filter: "(?=.*(广新|新加坡|SG|坡|狮城|🇸🇬|Singapore)).*$"}
   - {name: 🇰🇷 韩国节点, type: select, include-all: true, filter: "(?=.*(广韩|韩国|韓國|KR|首尔|春川|🇰🇷|Korea)).*$"}
-  - {name: 🇬🇧 英国节点, type: select, include-all: true, filter: "(?=.*(英国|英|伦敦|UK|United Kingdom|🇬🇧|London)).*$"}
   - {name: 🇹🇼 台湾节点, type: select, include-all: true, filter: "(?i)台|tw|taiwan"}
+  - {name: 🇪🇺 欧盟节点, type: select, include-all: true, filter: "(?i)欧盟|EU|英国|UK|俄罗斯|RU|德国|DE|法国|FR|意大利|IT|西班牙|ES|荷兰|NL|瑞典|SE|波兰|PL|爱尔兰|IE|比利时|BE|奥地利|AT|芬兰|FI|丹麦|DK|葡萄牙|PT|英|United Kingdom|Germany|France|Italy|Spain|Netherlands|Sweden|Poland|Ireland|Belgium|Austria|Finland|Denmark|Portugal|Russia|法兰克福|Frankfurt|巴黎|Paris|阿姆斯特丹|Amsterdam|伦敦|London"}
+
+# 用于IP敏感的专用嵌套策略组，手选+smart策略组。缺点：最长中断两分钟多。
+# , 🔒 港区-稳定IP, 🔒 日本-稳定IP, 🔒 美国-稳定IP, 🔒 新国-稳定IP, 🔒 韩国-稳定IP, 🔒 欧盟-稳定IP
   - {name: 🔒 港区-稳定IP, type: fallback, tolerance: 30, interval: 150, lazy: false, proxies: [🇭🇰 香港节点, ⭐ 香港智能] }
   - {name: 🔒 日本-稳定IP, type: fallback, tolerance: 30, interval: 150, lazy: false, proxies: [🇯🇵 日本节点, ⭐ 日本智能] }
   - {name: 🔒 美国-稳定IP, type: fallback, tolerance: 30, interval: 150, lazy: false, proxies: [🇺🇲 美国节点, ⭐ 美国智能] }
   - {name: 🔒 新国-稳定IP, type: fallback, tolerance: 30, interval: 150, lazy: false, proxies: [🇸🇬 新国节点, ⭐ 新国智能] }
   - {name: 🔒 韩国-稳定IP, type: fallback, tolerance: 30, interval: 150, lazy: false, proxies: [🇰🇷 韩国节点, ⭐ 韩国智能] }
-  - {name: 🔒 英国-稳定IP, type: fallback, tolerance: 30, interval: 150, lazy: false, proxies: [🇬🇧 英国节点, ⭐ 英国智能] }
   - {name: 🔒 台湾-稳定IP, type: fallback, tolerance: 30, interval: 150, lazy: false, proxies: [🇹🇼 台湾节点, ⭐ 台湾智能] }
-  - {name: 🌍 其他节点, type: select, include-all: true, filter: "^((?!(直连|拒绝|广港|香港|HK|Hong Kong|🇭🇰|HongKong|广台|台湾|台灣|TW|Tai Wan|🇹🇼|🇨🇳|TaiWan|Taiwan|广日|日本|JP|川日|东京|大阪|泉日|埼玉|沪日|深日|🇯🇵|Japan|广新|新加坡|SG|坡|狮城|🇸🇬|Singapore|广韩|韩国|韓國|KR|首尔|春川|🇰🇷|Korea|广美|美|US|纽约|波特兰|达拉斯|俄勒|凤凰城|费利蒙|拉斯|洛杉|圣何塞|圣克拉|西雅|芝加|🇺🇸|United States|英国|UK|United Kingdom|伦敦|英|London|🇬🇧)).)*$"}
+  - {name: 🔒 欧盟-稳定IP, type: fallback, tolerance: 30, interval: 150, lazy: false, proxies: [🇪🇺 欧盟节点, ⭐ 欧盟智能] }
+
+  - {name: 🏠 自建/家宽节点, type: select, include-all: true, filter: "(?i)(自建|CF|The_house|private|home)"}
+  - {name: 🌍 其他节点, type: select, include-all: true, filter: "^((?!(直连|拒绝|广港|香港|HK|Hong Kong|🇭🇰|HongKong|广台|台湾|台灣|TW|Tai Wan|🇹🇼|🇨🇳|TaiWan|Taiwan|广日|日本|JP|川日|东京|大阪|泉日|埼玉|沪日|深日|🇯🇵|Japan|广新|新加坡|SG|坡|狮城|🇸🇬|Singapore|广韩|韩国|韓國|KR|首尔|春川|🇰🇷|Korea|广美|美|USA|纽约|波特兰|达拉斯|俄勒|凤凰城|费利蒙|拉斯|洛杉|圣何塞|圣克拉|西雅|芝加|United States|欧盟|EU|英国|UK|俄罗斯|RU|德国|DE|法国|FR|意大利|IT|西班牙|ES|荷兰|NL|瑞典|SE|波兰|PL|爱尔兰|IE|比利时|BE|奥地利|AT|芬兰|FI|丹麦|DK|葡萄牙|PT|英|United Kingdom|Germany|France|Italy|Spain|Netherlands|Sweden|Poland|Ireland|Belgium|Austria|Finland|Denmark|Portugal|Russia|法兰克福|Frankfurt|巴黎|Paris|阿姆斯特丹|Amsterdam|伦敦|London)).)*$"}
   - {name: 🌐 全部节点, type: select, include-all: true}
+
+  # --- NEW LOAD BALANCE GROUPS START ---
+  - {name: ➡️ 香港均衡-散列, <<: *LoadBalanceCH, filter: "(?=.*(港|HK|(?i)Hong))^((?!(台|日|韩|新|深|美|德国|土耳其|英国|俄罗斯|摩尔多瓦)).)*$", icon: https://git.imee.me/https://github.com/Koolson/Qure/raw/master/IconSet/Color/Round_Robin_1.png}
+  - {name: ➡️ 日本均衡-散列, <<: *LoadBalanceCH, filter: "(?=.*(日|JP|(?i)Japan))^((?!(港|台|韩|新|美|尼日利亚)).)*$", icon: https://git.imee.me/https://github.com/Koolson/Qure/raw/master/IconSet/Color/Round_Robin_1.png}
+  - {name: ➡️ 美国均衡-散列, <<: *LoadBalanceCH, filter: "(?=.*(广美|美|USA|United States|纽约|波特兰|达拉斯|俄勒|凤凰城|费利蒙|拉斯|洛杉|圣何塞|圣克拉|西雅|芝加))(?=^(?!.*(亚美尼亚|Armenia|洪都拉斯)).*$).*$", icon: https://git.imee.me/https://github.com/Koolson/Qure/raw/master/IconSet/Color/Round_Robin_1.png}
+  - {name: ➡️ 新国均衡-散列, <<: *LoadBalanceCH, filter: "(?=.*(广新|新加坡|SG|坡|狮城|🇸🇬|Singapore)).*$", icon: https://git.imee.me/https://github.com/Koolson/Qure/raw/master/IconSet/Color/Round_Robin_1.png}
+  - {name: ➡️ 韩国均衡-散列, <<: *LoadBalanceCH, filter: "(?=.*(广韩|韩国|韓國|KR|首尔|春川|🇰🇷|Korea)).*$", icon: https://git.imee.me/https://github.com/Koolson/Qure/raw/master/IconSet/Color/Round_Robin_1.png}
+  - {name: ➡️ 台湾均衡-散列, <<: *LoadBalanceCH, filter: "(?=.*(台|TW|(?i)Taiwan))^((?!(港|日|韩|新|美)).)*$", icon: https://git.imee.me/https://github.com/Koolson/Qure/raw/master/IconSet/Color/Round_Robin_1.png}
+  - {name: ➡️ 欧盟均衡-散列, <<: *LoadBalanceCH, filter: "(?i)欧盟|EU|英国|UK|俄罗斯|RU|德国|DE|法国|FR|意大利|IT|西班牙|ES|荷兰|NL|瑞典|SE|波兰|PL|爱尔兰|IE|比利时|BE|奥地利|AT|芬兰|FI|丹麦|DK|葡萄牙|PT|英|United Kingdom|Germany|France|Italy|Spain|Netherlands|Sweden|Poland|Ireland|Belgium|Austria|Finland|Denmark|Portugal|Russia|法兰克福|Frankfurt|巴黎|Paris|阿姆斯特丹|Amsterdam|伦敦|London", icon: https://git.imee.me/https://github.com/Koolson/Qure/raw/master/IconSet/Color/Round_Robin_1.png}
+  - {name: ➡️ 香港均衡-轮询, <<: *LoadBalanceCR, filter: "(?=.*(港|HK|(?i)Hong))^((?!(台|日|韩|新|深|美|德国|土耳其|英国|俄罗斯|摩尔多瓦)).)*$", icon: https://git.imee.me/https://github.com/Koolson/Qure/raw/master/IconSet/Color/Round_Robin.png}
+  - {name: ➡️ 日本均衡-轮询, <<: *LoadBalanceCR, filter: "(?=.*(日|JP|(?i)Japan))^((?!(港|台|韩|新|美|尼日利亚)).)*$", icon: https://git.imee.me/https://github.com/Koolson/Qure/raw/master/IconSet/Color/Round_Robin.png}
+  - {name: ➡️ 美国均衡-轮询, <<: *LoadBalanceCR, filter: "(?=.*(广美|美|USA|United States|纽约|波特兰|达拉斯|俄勒|凤凰城|费利蒙|拉斯|洛杉|圣何塞|圣克拉|西雅|芝加))(?=^(?!.*(亚美尼亚|Armenia|洪都拉斯)).*$).*$", icon: https://git.imee.me/https://github.com/Koolson/Qure/raw/master/IconSet/Color/Round_Robin.png}
+  - {name: ➡️ 新国均衡-轮询, <<: *LoadBalanceCR, filter: "(?=.*(广新|新加坡|SG|坡|狮城|🇸🇬|Singapore)).*$", icon: https://git.imee.me/https://github.com/Koolson/Qure/raw/master/IconSet/Color/Round_Robin.png}
+  - {name: ➡️ 韩国均衡-轮询, <<: *LoadBalanceCR, filter: "(?=.*(广韩|韩国|韓國|KR|首尔|春川|🇰🇷|Korea)).*$", icon: https://git.imee.me/https://github.com/Koolson/Qure/raw/master/IconSet/Color/Round_Robin.png}
+  - {name: ➡️ 台湾均衡-轮询, <<: *LoadBalanceCR, filter: "(?=.*(台|TW|(?i)Taiwan))^((?!(港|日|韩|新|美)).)*$", icon: https://git.imee.me/https://github.com/Koolson/Qure/raw/master/IconSet/Color/Round_Robin.png}
+  - {name: ➡️ 欧盟均衡-轮询, <<: *LoadBalanceCR, filter: "(?i)欧盟|EU|英国|UK|俄罗斯|RU|德国|DE|法国|FR|意大利|IT|西班牙|ES|荷兰|NL|瑞典|SE|波兰|PL|爱尔兰|IE|比利时|BE|奥地利|AT|芬兰|FI|丹麦|DK|葡萄牙|PT|英|United Kingdom|Germany|France|Italy|Spain|Netherlands|Sweden|Poland|Ireland|Belgium|Austria|Finland|Denmark|Portugal|Russia|法兰克福|Frankfurt|巴黎|Paris|阿姆斯特丹|Amsterdam|伦敦|London", icon: https://git.imee.me/https://github.com/Koolson/Qure/raw/master/IconSet/Color/Round_Robin.png}
+  # --- NEW LOAD BALANCE GROUPS END ---
 
 # 规则匹配
 # 此规则部分没有做防泄露处理，因为弊严重大于利！
 rules:
-  - DOMAIN-SUFFIX,qichiyu.com,🚀 默认代理
+  #- DOMAIN-SUFFIX,qichiyu.com,🚀 默认代理
   - RULE-SET,private_domain,直连
   - RULE-SET,apple_domain,🍎 Apple
   - RULE-SET,proxylite,🚀 默认代理
@@ -203,6 +245,7 @@ rules:
   - RULE-SET,speedtest_domain,✈️ Speedtest
   - RULE-SET,netflix_domain,🎥 NETFLIX
   - RULE-SET,HBO_domain,📺 HBO
+  - RULE-SET,emby_domain,🎬 Emby
   - RULE-SET,paypal_domain,💶 PayPal
   - RULE-SET,gfw_domain,🚀 默认代理
   - RULE-SET,geolocation-!cn,🚀 默认代理
@@ -218,7 +261,7 @@ rule-anchor:
   ip: &ip {type: http, interval: 86400, behavior: ipcidr, format: mrs}
   domain: &domain {type: http, interval: 86400, behavior: domain, format: mrs}
   class: &class {type: http, interval: 86400, behavior: classical, format: text}
-rule-providers: 
+rule-providers:
   private_domain: { <<: *domain, url: "https://github.moeyy.xyz/https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geosite/private.mrs"}
   proxylite: { <<: *class, url: "https://github.moeyy.xyz/https://raw.githubusercontent.com/qichiyuhub/rule/refs/heads/main/proxy.list"}
   ai: {  <<: *domain, url: "https://github.moeyy.xyz/https://github.com/MetaCubeX/meta-rules-dat/raw/refs/heads/meta/geo/geosite/category-ai-!cn.mrs" }
@@ -244,6 +287,7 @@ rule-providers:
   apple_domain: { <<: *domain, url: "https://github.moeyy.xyz/https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geosite/apple-cn.mrs"}
   speedtest_domain: { <<: *domain, url: "https://github.moeyy.xyz/https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geosite/ookla-speedtest.mrs"}
   tiktok_domain: { <<: *domain, url: "https://github.moeyy.xyz/https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geosite/tiktok.mrs"}
+  emby_domain: { <<: *class, url: "https://raw.githubusercontent.com/cendon-999/Rules/refs/heads/main/rules/Domain/emby.list"}
   gfw_domain: { <<: *domain, url: "https://github.moeyy.xyz/https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geosite/gfw.mrs"}
   geolocation-!cn: { <<: *domain, url: "https://github.moeyy.xyz/https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geosite/geolocation-!cn.mrs"}
   cn_domain: { <<: *domain, url: "https://github.moeyy.xyz/https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geosite/cn.mrs"}
