@@ -152,7 +152,7 @@ proxy-groups:
   - {name: 🎥 NETFLIX, <<: *pr}
   - {name: 🏰 Disney, <<: *pr}
   - {name: 📺 HBO, <<: *pr}
-  # - {name: 📽️ Emby, <<: *pr}
+  - {name: 📽️ Emby, <<: *pr}
   - {name: 📸 Instagram, <<: *pr}
   - {name: 💬 WhatsApp, <<: *pr}
   - {name: 🖼️ Facebook, <<: *pr}
