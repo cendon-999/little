@@ -97,8 +97,8 @@ dns:
   enhanced-mode: fake-ip
   fake-ip-range: 198.20.0.1/16
   nameserver:
-    - 223.5.5.5
-    - 119.29.29.29
+    - 202.103.24.68
+    - 202.103.44.150
   proxy-server-nameserver:
     - quic://dns.alidns.com/dns-query
     - https://sm2.doh.pub/dns-query
