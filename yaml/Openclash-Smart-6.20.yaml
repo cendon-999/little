@@ -172,7 +172,7 @@ proxy-groups:
   - {name: 🎯 直连, <<: *pr_c}
   - {name: 🐟 漏网之鱼, <<: *pr}
 
-  - {name: ♻️ 香港自动, type: url-test, include-all: true, tolerance: 20, interval: 300, filter: "(?=.*(港|HK|(?i)Hong))^((?!(台|日|韩|新|深|美)).)*$"}
+  - {name: ♻️ 香港自动, type: url-test, include-all: true, tolerance: 20, interval: 300, filter: "(?=.*(港|HK|(?i)Hong))^((?!(台|日|韩|新|深|美|阿联酋|德国|土耳其|英国|俄罗斯|摩尔多瓦)).)*$"}
   - {name: ♻️ 日本自动, type: url-test, include-all: true, tolerance: 20, interval: 300, filter: "(?=.*(日|JP|(?i)Japan))^((?!(港|台|韩|新|美)).)*$" }
   - {name: ♻️ 美国自动, type: url-test, include-all: true, tolerance: 20, interval: 300, filter: "(?=.*(广美|美|US|纽约|波特兰|达拉斯|俄勒|凤凰城|费利蒙|拉斯|洛杉|圣何塞|圣克拉|西雅|芝加|🇺🇸|United States)).*$"}
   - {name: ♻️ 新国自动, type: url-test, include-all: true, tolerance: 20, interval: 300, filter: "(?=.*(广新|新加坡|SG|坡|狮城|🇸🇬|Singapore)).*$"}
@@ -180,7 +180,7 @@ proxy-groups:
   - {name: ♻️ 台湾自动, type: url-test, include-all: true, tolerance: 20, interval: 300, filter: "(?=.*(广台|台湾|台灣|TW|Tai Wan|🇹🇼|Taiwan)).*$"}
   - {name: ♻️ 欧洲自动, type: url-test, include-all: true, tolerance: 20, interval: 300, filter: "(?=.*(欧|Europe|🇪🇺|Germany|France|Netherlands|Spain|Italy|Austria|Belgium|Bulgaria|Croatia|Cyprus|Czech|Denmark|Estonia|Finland|Greece|Hungary|Ireland|Latvia|Lithuania|Luxembourg|Malta|Poland|Portugal|Romania|Slovakia|Slovenia|Sweden|Russia|德国|法国|荷兰|西班牙|意大利|奥地利|比利时|保加利亚|克罗地亚|塞浦路斯|捷克|丹麦|爱沙尼亚|芬兰|希腊|匈牙利|爱尔兰|拉脱维亚|立陶宛|卢森堡|马耳他|波兰|葡萄牙|罗马尼亚|斯洛伐克|斯洛文尼亚|瑞典|俄罗斯|RU|🇷🇺)).*$"}
   - {name: ♻️ 自动选择, type: url-test, include-all: true, tolerance: 20, interval: 300, filter: "^((?!(直连)).)*$"}
-  - {name: ⭐ 香港智能, type: smart, include-all: true, tolerance: 20, interval: 300, uselightgbm: true, collectdata: true, filter: "(?=.*(港|HK|(?i)Hong))^((?!(台|日|韩|新|深|美)).)*$", url: "http://www.gstatic.com/generate_204", lazy: true, persistent: true}
+  - {name: ⭐ 香港智能, type: smart, include-all: true, tolerance: 20, interval: 300, uselightgbm: true, collectdata: true, filter: "(?=.*(港|HK|(?i)Hong))^((?!(台|日|韩|新|深|美|阿联酋|德国|土耳其|英国|俄罗斯|摩尔多瓦)).)*$", url: "http://www.gstatic.com/generate_204", lazy: true, persistent: true}
   - {name: ⭐ 日本智能, type: smart, include-all: true, tolerance: 20, interval: 300, uselightgbm: true, collectdata: true, filter: "(?=.*(日|JP|(?i)Japan))^((?!(港|台|韩|新|美)).)*$", url: "http://www.gstatic.com/generate_204", lazy: true, persistent: true}
   - {name: ⭐ 美国智能, type: smart, include-all: true, tolerance: 20, interval: 300, uselightgbm: true, collectdata: true, filter: "(?=.*(广美|美|US|纽约|波特兰|达拉斯|俄勒|凤凰城|费利蒙|拉斯|洛杉|圣何塞|圣克拉|西雅|芝加|🇺🇸|United States)).*$", url: "http://www.gstatic.com/generate_204", lazy: true, persistent: true}
   - {name: ⭐ 新国智能, type: smart, include-all: true, tolerance: 20, interval: 300, uselightgbm: true, collectdata: true, filter: "(?=.*(广新|新加坡|SG|坡|狮城|🇸🇬|Singapore)).*$", url: "http://www.gstatic.com/generate_204", lazy: true, persistent: true}
@@ -198,7 +198,7 @@ proxy-groups:
   - {name: 🔒 欧洲-稳定IP, type: fallback, tolerance: 30, interval: 150, lazy: false, proxies: [🌍 欧洲节点, ⭐ 欧洲智能]}
 
 # 手选策略组选择最快的节点 ，配合稳定IP策略组使用。
-  - {name: 🇭🇰 香港节点, type: select, include-all: true, filter: "(?i)港|hk|hongkong|hong kong"}
+  - {name: 🇭🇰 香港节点, type: select, include-all: true, filter: "(?=.*(港|HK|(?i)Hong))^((?!(台|日|韩|新|深|美|阿联酋|德国|土耳其|英国|俄罗斯|摩尔多瓦)).)*$"}
   - {name: 🇯🇵 日本节点, type: select, include-all: true, filter: "(?i)日|jp|japan"}
   - {name: 🇺🇲 美国节点, type: select, include-all: true, filter: "(?=.*(广美|美|US|纽约|波特兰|达拉斯|俄勒|凤凰城|费利蒙|拉斯|洛杉|圣何塞|圣克拉|西雅|芝加|🇺🇸|United States)).*$"}
   - {name: 🇸🇬 新国节点, type: select, include-all: true, filter: "(?=.*(广新|新加坡|SG|坡|狮城|🇸🇬|Singapore)).*$"}
@@ -206,7 +206,7 @@ proxy-groups:
   - {name: 🇹🇼 台湾节点, type: select, include-all: true, filter: "(?i)台|tw|taiwan"}
   - {name: 🌍 欧洲节点, type: select, include-all: true, filter: "(?i)欧|europe|germany|france|netherlands|spain|italy|austria|belgium|bulgaria|croatia|cyprus|czech|denmark|estonia|finland|greece|hungary|ireland|latvia|lithuania|luxembourg|malta|poland|portugal|romania|slovakia|slovenia|sweden|russia|德国|法国|荷兰|西班牙|意大利|奥地利|比利时|保加利亚|克罗地亚|塞浦路斯|捷克|丹麦|爱沙尼亚|芬兰|希腊|匈牙利|爱尔兰|拉脱维亚|立陶宛|卢森堡|马耳他|波兰|葡萄牙|罗马尼亚|斯洛伐克|斯洛文尼亚|瑞典|俄罗斯|ru|🇷🇺"}
 
-  - {name: 🔯 香港故转, type: fallback, include-all: true, tolerance: 20, interval: 300, filter: "(?=.*(港|HK|(?i)Hong))^((?!(台|日|韩|新|深|美)).)*$"}
+  - {name: 🔯 香港故转, type: fallback, include-all: true, tolerance: 20, interval: 300, filter: "(?=.*(港|HK|(?i)Hong))^((?!(台|日|韩|新|深|美|阿联酋|德国|土耳其|英国|俄罗斯|摩尔多瓦)).)*$"}
   - {name: 🔯 日本故转, type: fallback, include-all: true, tolerance: 20, interval: 300, filter: "(?=.*(日|JP|(?i)Japan))^((?!(港|台|韩|新|美)).)*$" }
   - {name: 🔯 美国故转, type: fallback, include-all: true, tolerance: 20, interval: 300, filter: "(?=.*(广美|美|US|纽约|波特兰|达拉斯|俄勒|凤凰城|费利蒙|拉斯|洛杉|圣何塞|圣克拉|西雅|芝加|🇺🇸|United States)).*$"}
   - {name: 🔯 新国故转, type: fallback, include-all: true, tolerance: 20, interval: 300, filter: "(?=.*(广新|新加坡|SG|坡|狮城|🇸🇬|Singapore)).*$"}
