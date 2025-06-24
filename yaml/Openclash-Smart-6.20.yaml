@@ -126,6 +126,7 @@ dns:
     - '*.bt-tracker.*'    # BT Tracker 服务器
     - 'localhost'
     - '*.msftconnecttest.com' # Windows 网络检测
+    - '*.miwifi.com'
 
 # 入站
 tun:
