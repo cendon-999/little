@@ -111,7 +111,7 @@ dns:
     - https://dns.google/dns-query
     - https://dns.cloudflare.com/dns-query
   fake-ip-filter:
-    - "rule-set:fakeip_filter_domain,private_domain,cn_domain,Sony_domain,Epic_domain,Blizzard_domain,Nintend_domain"
+    # - "rule-set:fakeip_filter_domain,private_domain,cn_domain,Sony_domain,Epic_domain,Blizzard_domain,Nintend_domain"
     - +.qeayr.cn
     - +.saojc.xyz
     - +.sssyun.xyz
