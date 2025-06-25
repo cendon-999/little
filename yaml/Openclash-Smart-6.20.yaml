@@ -315,5 +315,5 @@ rule-providers:
   google_ip: { <<: *ip, url: "https://github.moeyy.xyz/https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geoip/google.mrs"}
   telegram_ip: { <<: *ip, url: "https://github.moeyy.xyz/https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geoip/telegram.mrs"}
   netflix_ip: { <<: *ip, url: "https://github.moeyy.xyz/https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geoip/netflix.mrs"}
-  fakeip_filter_domain: { <<: *domain, url: "https://raw.githubusercontent.com/Lanlan13-14/Rules/refs/heads/main/rules/Domain/fakeip-filter.mrs" }
+  fakeip_filter_domain: { <<: *domain, url: "https://raw.githubusercontent.com/Lanlan13-14/Rules/refs/heads/main/rules/Domain/fakeip-filter.mrs"}
 
