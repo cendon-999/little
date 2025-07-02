@@ -107,16 +107,16 @@ dns:
     - https://dns.google/dns-query
     - https://dns.cloudflare.com/dns-query
   fake-ip-filter:
-    # - "rule-set:fakeip_filter_domain,private_domain,cn_domain,Sony_domain,Epic_domain,Blizzard_domain,Nintend_domain"
-    - +.qeayr.cn
-    - +.saojc.xyz
-    - +.sssyun.xyz
-    - +.dler.cloud
-    - +.0tk8a3a1q4t94dler.com
-    - +.aerianas.top
-    - '*.lan'               # 局域网设备（如 router.lan）
-    - '*.local'             # mDNS 服务（如 printer.local）
-    - 'time.*.com'          # 时间服务器（如 time.apple.com）
+    - "rule-set:fakeip_filter_domain,private_domain,cn_domain"
+    #- +.qeayr.cn
+    #- +.saojc.xyz
+    #- +.sssyun.xyz
+    #- +.dler.cloud
+    #- +.0tk8a3a1q4t94dler.com
+    #- +.aerianas.top
+    #- '*.lan'               # 局域网设备（如 router.lan）
+    #- '*.local'             # mDNS 服务（如 printer.local）
+    #- 'time.*.com'          # 时间服务器（如 time.apple.com）
     - '*.steamcontent.com'  # Steam 更新域名
     - '*.nflxvideo.net'     # Netflix CDN
     - '*.bt-tracker.*'      # BT Tracker 服务器
@@ -309,5 +309,5 @@ rule-providers:
   google_ip: { <<: *ip, url: "https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geoip/google.mrs"}
   telegram_ip: { <<: *ip, url: "https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geoip/telegram.mrs"}
   netflix_ip: { <<: *ip, url: "https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geoip/netflix.mrs"}
-  fakeip_filter_domain: { <<: *domain, url: "https://raw.githubusercontent.com/Lanlan13-14/Rules/refs/heads/main/rules/Domain/fakeip-filter.mrs"}
+  fakeip_filter_domain: { <<: *domain, url: "https://raw.githubusercontent.com/juewuy/ShellCrash/refs/heads/dev/public/fake_ip_filter.list"}
 
