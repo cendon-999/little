@@ -107,16 +107,16 @@ dns:
     - https://dns.google/dns-query
     - https://dns.cloudflare.com/dns-query
   fake-ip-filter:
-    - "rule-set:fake-ip-filter,private_domain,cn_domain"
-    #- +.qeayr.cn
-    #- +.saojc.xyz
-    #- +.sssyun.xyz
-    #- +.dler.cloud
-    #- +.0tk8a3a1q4t94dler.com
-    #- +.aerianas.top
-    #- '*.lan'               # 局域网设备（如 router.lan）
-    #- '*.local'             # mDNS 服务（如 printer.local）
-    #- 'time.*.com'          # 时间服务器（如 time.apple.com）
+    # - "rule-set:fake-ip-filter,private_domain,cn_domain"
+    - +.qeayr.cn
+    - +.saojc.xyz
+    - +.sssyun.xyz
+    - +.dler.cloud
+    - +.0tk8a3a1q4t94dler.com
+    - +.aerianas.top
+    - '*.lan'               # 局域网设备（如 router.lan）
+    - '*.local'             # mDNS 服务（如 printer.local）
+    - 'time.*.com'          # 时间服务器（如 time.apple.com）
     - '*.steamcontent.com'  # Steam 更新域名
     - '*.nflxvideo.net'     # Netflix CDN
     - '*.bt-tracker.*'      # BT Tracker 服务器
