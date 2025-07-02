@@ -107,7 +107,7 @@ dns:
     - https://dns.google/dns-query
     - https://dns.cloudflare.com/dns-query
   fake-ip-filter:
-    - "rule-set:fakeip_filter_domain,private_domain,cn_domain"
+    - "rule-set:fake-ip-filter,private_domain,cn_domain"
     #- +.qeayr.cn
     #- +.saojc.xyz
     #- +.sssyun.xyz
@@ -309,5 +309,12 @@ rule-providers:
   google_ip: { <<: *ip, url: "https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geoip/google.mrs"}
   telegram_ip: { <<: *ip, url: "https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geoip/telegram.mrs"}
   netflix_ip: { <<: *ip, url: "https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geoip/netflix.mrs"}
-  fakeip_filter_domain: { <<: *domain, url: "https://cdn.jsdelivr.net/gh/juewuy/ShellCrash@dev/public/fake_ip_filter.list"}
+  #fakeip_filter_domain: { <<: *domain, url: "https://cdn.jsdelivr.net/gh/juewuy/ShellCrash@dev/public/fake_ip_filter.list"}
+  fake-ip-filter:
+    type: http
+    behavior: domain
+    format: text
+    interval: 86400
+    url: https://cdn.jsdelivr.net/gh/juewuy/ShellCrash@dev/public/fake_ip_filter.list
+    path: ./ruleset/fake_ip_filter.list
 
