@@ -19,18 +19,22 @@ Common Proxy Settings: &cps
 # 代理提供商 (Proxy Providers) - 定义从外部订阅获取代理节点
 # =======================================================
 proxy-providers:
-  needay:
-    url: "订阅地址"
+  Airport_01:
+    url: "订阅链接1"
     <<: *cps
     override: {additional-prefix: '[🛫needay] '}
-  mitce:
-    url: "订阅地址"
+  Airport_02:
+    url: "订阅链接2"
     <<: *cps
     override: {additional-prefix: '[🛫mitce] '}
-  yfjc:
-    url: "订阅地址"
+  Airport_03:
+    url: "订阅链接3"
     <<: *cps
     override: {additional-prefix: '[🛫yfjc] '}
+  聚合机场:
+    url: "订阅链接4"
+    <<: *cps
+    override: {additional-prefix: '[自建] '}
 
 # ========================
 # 代理节点定义 (Proxies) - 定义内置或静态代理节点
