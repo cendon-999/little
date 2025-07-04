@@ -22,15 +22,15 @@ proxy-providers:
   Airport_01:
     url: "订阅链接1"
     <<: *cps
-    override: {additional-prefix: '[🛫needay] '}
+    # override: {additional-prefix: '[🛫needay] '}
   Airport_02:
     url: "订阅链接2"
     <<: *cps
-    override: {additional-prefix: '[🛫mitce] '}
+    # override: {additional-prefix: '[🛫mitce] '}
   Airport_03:
     url: "订阅链接3"
     <<: *cps
-    override: {additional-prefix: '[🛫yfjc] '}
+    # override: {additional-prefix: '[🛫yfjc] '}
   聚合机场:
     url: "订阅链接4"
     <<: *cps
