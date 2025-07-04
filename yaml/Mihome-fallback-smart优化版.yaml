@@ -1,0 +1,403 @@
+# ================================
+# Mihomo-fallback-smart方案 - 最终版
+# ================================
+
+# ========================
+# 代理提供商的公共设置
+# ========================
+Common Proxy Settings: &cps
+  type: http
+  # 调整订阅更新间隔为12小时，及时获取最新节点
+  interval: 43200 
+  health-check: 
+    enable: true
+    url: https://www.gstatic.com/generate_204
+    # 缩短健康检查间隔，更频繁检查节点状态
+    interval: 180 
+
+# =======================================================
+# 代理提供商 (Proxy Providers) - 定义从外部订阅获取代理节点
+# =======================================================
+proxy-providers:
+  needay:
+    url: "订阅地址"
+    <<: *cps
+    override: {additional-prefix: '[🛫needay] '}
+  mitce:
+    url: "订阅地址"
+    <<: *cps
+    override: {additional-prefix: '[🛫mitce] '}
+  yfjc:
+    url: "订阅地址"
+    <<: *cps
+    override: {additional-prefix: '[🛫yfjc] '}
+
+# ========================
+# 代理节点定义 (Proxies) - 定义内置或静态代理节点
+# ========================
+proxies:
+  - {name: 直连, type: direct}
+  - {name: 拒绝, type: reject}
+
+# ========================
+# 通用设置及主要端口 - Clash核心运行参数
+# ========================
+log-level: warning
+mode: rule
+ipv6: true
+unified-delay: true
+tcp-concurrent: true
+# 调整TCP连接空闲超时时间
+keep-alive-idle: 300 
+# 调整TCP连接保活间隔
+keep-alive-interval: 10 
+
+allow-lan: true
+port: 7890
+socks-port: 7891
+mixed-port: 7893
+redir-port: 7892
+tproxy-port: 7895
+
+# ========================
+# TUN 模块配置 - 透明代理功能
+# ========================
+tun:
+  enable: true
+  device: utun
+  stack: mixed
+  mtu: 9000
+  auto-route: false
+  auto-redirect: false
+  auto-detect-interface: false
+  endpoint-independent-nat: true
+
+# ========================
+# DNS 配置 - 域名解析设置
+# ========================
+dns:
+  enable: true
+  listen: 0.0.0.0:7874
+  ipv6: true
+  enhanced-mode: fake-ip
+  fake-ip-range: 198.20.0.1/16
+  fake-ip-filter-mode: blacklist
+  nameserver: 
+    # 使用更可靠的DNS服务器
+    - 116.199.0.200
+    - 114.114.114.114
+  fake-ip-filter:
+    - +.lan
+    - +.local
+    - geosite:cn
+    - geosite:private
+    - "+.msftconnecttest.com"
+    - "+.msftncsi.com"
+    - "time.*.com"
+
+profile:
+  store-selected: true
+  store-fake-ip: true
+
+# ========================
+# 外部控制及UI设置
+# ========================
+external-controller: 0.0.0.0:9090
+external-ui: ui
+external-ui-name: zashboard
+external-ui-url: https://gh-proxy.com/github.com/Zephyruso/zashboard/archive/refs/heads/gh-pages.zip
+secret: "123456"
+
+# ========================
+# Geo 数据管理 - 地理数据文件（GeoIP/GeoSite）的设置
+# ========================
+geodata-mode: false
+geodata-loader: standard
+geox-url:
+  geosite: https://gh-proxy.com/github.com/MetaCubeX/meta-rules-dat/releases/download/latest/geosite.dat
+  mmdb:    https://gh-proxy.com/github.com/MetaCubeX/meta-rules-dat/releases/download/latest/geoip-lite.metadb
+  geoip:   https://gh-proxy.com/github.com/xishang0128/geoip/releases/download/latest/GeoLite2-Country.mmdb
+  asn:     https://gh-proxy.com/github.com/xishang0128/geoip/releases/download/latest/GeoLite2-ASN.mmdb
+geo-auto-update: true
+# 调整Geo数据更新间隔为12小时
+geo-update-interval: 12 
+
+# ========================
+# 策略组定义 (Proxy Groups) - 组织代理节点和路由逻辑
+# 必须在 Rules 和 Rule Providers 之前定义
+# ========================
+default-proxies: &dp
+  type: select
+  proxies: [直连, 所有-智选, 港台日新韩-故转, 港台日新韩-智选, 台日新韩-故转, 台日新韩-智选, 香港-故转, 香港-智选, 台湾-故转, 日本-故转, 新加坡-故转, 韩国-故转, 美国-故转, 其他-故转, 拒绝]
+
+smart-defaults: &sd
+  type: smart
+  include-all: true
+  policy-priority: HK:1.8;SG:1.5;JP:1.3;TW:1.2;mitce:0.8
+  uselightgbm: true
+  collectdata: true
+  # 缩短延迟测试间隔
+  interval: 180 
+
+proxy-groups:
+  - {name: AI, <<: *dp}
+  - {name: Telegram, <<: *dp}
+  - {name: YouTube, <<: *dp}
+  - {name: 流媒体, <<: *dp}
+  - {name: GitHub, <<: *dp}
+  - {name: Google, <<: *dp}
+  - {name: Game, <<: *dp}
+  - {name: 美企, <<: *dp}
+  - {name: 国外, <<: *dp}
+  - {name: 国内, <<: *dp}
+  - {name: Test, <<: *dp}
+  - {name: Block, <<: *dp}
+
+  - name: 所有-智选
+    <<: *sd
+    filter: "^((?!(直连|拒绝|官网|.com|到期|异常)).)*$"
+
+  - name: 港台日新韩-故转
+    type: fallback
+    # 缩短节点检测间隔
+    interval: 180 
+    lazy: false
+    proxies:
+      - 港台日新韩-手选
+      - 港台日新韩-智选
+  - name: 港台日新韩-手选
+    type: select
+    include-all: true
+    filter: "(?=.*(香港|HK|Hong Kong|🇭🇰|HongKong|台湾|台灣|TW|Taiwan|日本|JP|Japan|新加坡|SG|Singapore|韩国|韓國|KR|Korea)).*$"
+  - name: 港台日新韩-智选
+    <<: *sd
+    filter: "(?=.*(香港|HK|Hong Kong|🇭🇰|HongKong|台湾|台灣|TW|Taiwan|日本|JP|Japan|新加坡|SG|Singapore|韩国|韓國|KR|Korea)).*$"
+
+  - name: 台日新韩-故转
+    type: fallback
+    interval: 180
+    lazy: false
+    proxies:
+      - 台日新韩-手选
+      - 台日新韩-智选
+  - name: 台日新韩-手选
+    type: select
+    include-all: true
+    filter: "(?=.*(台湾|台灣|TW|Taiwan|日本|JP|Japan|新加坡|SG|Singapore|韩国|韓國|KR|Korea)).*$"
+  - name: 台日新韩-智选
+    <<: *sd
+    filter: "(?=.*(台湾|台灣|TW|Taiwan|日本|JP|Japan|新加坡|SG|Singapore|韩国|韓國|KR|Korea)).*$"
+
+  - name: 香港-故转
+    type: fallback
+    interval: 180
+    lazy: false
+    proxies:
+      - 香港-手选
+      - 香港-智选
+  - name: 香港-手选
+    type: select
+    include-all: true
+    filter: "(?=.*(香港|HK|Hong Kong|🇭🇰|HongKong)).*$"
+  - name: 香港-智选
+    <<: *sd
+    filter: "(?=.*(香港|HK|Hong Kong|🇭🇰|HongKong)).*$"
+
+  - name: 台湾-故转
+    type: fallback
+    interval: 180
+    lazy: false
+    proxies:
+      - 台湾-手选
+      - 台湾-智选
+  - name: 台湾-手选
+    type: select
+    include-all: true
+    filter: "(?=.*(台湾|台灣|TW|Taiwan)).*$"
+  - name: 台湾-智选
+    <<: *sd
+    filter: "(?=.*(台湾|台灣|TW|Taiwan)).*$"
+
+  - name: 日本-故转
+    type: fallback
+    interval: 180
+    lazy: false
+    proxies:
+      - 日本-手选
+      - 日本-智选
+  - name: 日本-手选
+    type: select
+    include-all: true
+    filter: "(?=.*(日本|JP|Japan)).*$"
+  - name: 日本-智选
+    <<: *sd
+    filter: "(?=.*(日本|JP|Japan)).*$"
+
+  - name: 新加坡-故转
+    type: fallback
+    interval: 180
+    lazy: false
+    proxies:
+      - 新加坡-手选
+      - 新加坡-智选
+  - name: 新加坡-手选
+    type: select
+    include-all: true
+    filter: "(?=.*(新加坡|SG|Singapore)).*$"
+  - name: 新加坡-智选
+    <<: *sd
+    filter: "(?=.*(新加坡|SG|Singapore)).*$"
+
+  - name: 韩国-故转
+    type: fallback
+    interval: 180
+    lazy: false
+    proxies:
+      - 韩国-手选
+      - 韩国-智选
+  - name: 韩国-手选
+    type: select
+    include-all: true
+    filter: "(?=.*(韩国|韓國|KR|Korea)).*$"
+  - name: 韩国-智选
+    <<: *sd
+    filter: "(?=.*(韩国|韓國|KR|Korea)).*$"
+
+  - name: 美国-故转
+    type: fallback
+    interval: 180
+    lazy: false
+    proxies:
+      - 美国-手选
+      - 美国-智选
+  - name: 美国-手选
+    type: select
+    include-all: true
+    filter: "(?=.*(美国|US|United States)).*$"
+  - name: 美国-智选
+    <<: *sd
+    filter: "(?=.*(美国|US|United States)).*$"
+
+  - name: 其他-故转
+    type: fallback
+    interval: 180
+    lazy: false
+    proxies:
+      - 其他-手选
+      - 其他-智选
+  - name: 其他-手选
+    type: select
+    include-all: true
+    filter: "^((?!(直连|拒绝|香港|HK|Hong Kong|🇭🇰|HongKong|台湾|台灣|TW|Taiwan|日本|JP|Japan|新加坡|SG|Singapore|韩国|韓國|KR|Korea|美国|US|United States)).)*$"
+  - name: 其他-智选
+    <<: *sd
+    filter: "^((?!(直连|拒绝|香港|HK|Hong Kong|🇭🇰|HongKong|台湾|台灣|TW|Taiwan|日本|JP|Japan|新加坡|SG|Singapore|韩国|韓國|KR|Korea|美国|US|United States)).)*$"
+
+# ========================
+# 规则集提供者 (Rule Providers) - 定义从外部下载规则集的方式和元数据
+# ========================
+rule-anchor:
+  ip: &ip {type: http, interval: 43200, behavior: ipcidr, format: mrs}
+  domain: &domain {type: http, interval: 43200, behavior: domain, format: mrs}
+  class: &class {type: http, interval: 43200, behavior: classical, format: text}
+
+rule-providers:
+  # 1. 国内直连类规则提供者 (与 Rules 中优先直连规则对应)
+  private: {<<: *domain, url: "https://gh-proxy.com/raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geosite/private.mrs"}
+  private-ip: {<<: *ip, url: "https://gh-proxy.com/raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geoip/private.mrs"}
+  Custom-Direct: {<<: *class, url: "https://gh-proxy.com/raw.githubusercontent.com/liandu2024/clash/refs/heads/main/list/Direct.list"}
+  ChinaMax: {<<: *class, url: "https://gh-proxy.com/raw.githubusercontent.com/blackmatrix7/ios_rule_script/refs/heads/master/rule/Clash/ChinaMax/ChinaMax.list"}
+  category-games@cn: {<<: *domain, url: "https://gh-proxy.com/raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geosite/category-games@cn.mrs"}
+  Steam-CDN: {<<: *class, url: "https://gh-proxy.com/raw.githubusercontent.com/Aethersailor/Custom_OpenClash_Rules/main/rule/Steam_CDN.list"}
+  category-game-platforms-download: {<<: *domain, url: "https://gh-proxy.com/raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geosite/category-game-platforms-download.mrs"}
+  category-public-tracker: {<<: *domain, url: "https://gh-proxy.com/raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geosite/category-public-tracker.mrs"}
+
+  # 2. 特定业务代理类规则集
+  category-ai-!cn: {<<: *domain, url: "https://gh-proxy.com/raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geosite/category-ai-!cn.mrs"}
+  AI1: {<<: *class, url: "https://gh-proxy.com/raw.githubusercontent.com/liandu2024/clash/refs/heads/main/list/AI.list"}
+  AI2: {<<: *class, url: "https://gh-proxy.com/raw.githubusercontent.com/liandu2024/clash/refs/heads/main/list/AI2.list"}
+  category-communication: {<<: *domain, url: "https://gh-proxy.com/raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geosite/category-communication.mrs"}
+  telegram-ip: {<<: *ip, url: "https://gh-proxy.com/raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geoip/telegram.mrs"}
+  category-social-media-!cn: {<<: *domain, url: "https://gh-proxy.com/raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geosite/category-social-media-!cn.mrs"}
+  twitter-ip: {<<: *ip, url: "https://gh-proxy.com/raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geoip/twitter.mrs"}
+  facebook-ip: {<<: *ip, url: "https://gh-proxy.com/raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geoip/facebook.mrs"}
+  github: {<<: *class, url: "https://gh-proxy.com/raw.githubusercontent.com/blackmatrix7/ios_rule_script/refs/heads/master/rule/Clash/GitHub/GitHub.list"}
+  youtube: {<<: *domain, url: "https://gh-proxy.com/raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geosite/youtube.mrs"}
+  TikTok: {<<: *class, url: "https://gh-proxy.com/raw.githubusercontent.com/blackmatrix7/ios_rule_script/refs/heads/master/rule/Clash/TikTok/TikTok.list"}
+  category-entertainment: {<<: *domain, url: "https://gh-proxy.com/raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geosite/category-entertainment.mrs"}
+  netflix-ip: {<<: *ip, url: "https://gh-proxy.com/raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geoip/netflix.mrs"}
+  google: {<<: *domain, url: "https://gh-proxy.com/raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geosite/google.mrs"}
+  google-ip: {<<: *ip, url: "https://gh-proxy.com/raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geoip/google.mrs"}
+  apple: {<<: *domain, url: "https://gh-proxy.com/raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geosite/apple.mrs"}
+  microsoft: {<<: *domain, url: "https://gh-proxy.com/raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geosite/microsoft.mrs"}
+  Nvidia: {<<: *class, url: "https://gh-proxy.com/raw.githubusercontent.com/blackmatrix7/ios_rule_script/refs/heads/master/rule/Clash/Nvidia/Nvidia.list"}
+  test: {<<: *class, url: "https://gh-proxy.com/raw.githubusercontent.com/liandu2024/clash/refs/heads/main/list/Check.list"}
+  steam: {<<: *class, url: "https://gh-proxy.com/raw.githubusercontent.com/blackmatrix7/ios_rule_script/master/rule/Clash/Steam/Steam.list"}
+  category-games: {<<: *domain, url: "https://gh-proxy.com/raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geosite/category-games.mrs"}
+  Block: {<<: *class, url: "https://gh-proxy.com/raw.githubusercontent.com/liandu2024/clash/refs/heads/main/list/Block.list"}
+
+  # 3. GFW 规则集
+  gfw: {<<: *domain, url: "https://gh-proxy.com/raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geosite/gfw.mrs"}
+  Proxy: {<<: *class, url: "https://gh-proxy.com/raw.githubusercontent.com/liandu2024/clash/refs/heads/main/list/Proxy.list"}
+  Global: {<<: *class, url: "https://gh-proxy.com/raw.githubusercontent.com/blackmatrix7/ios_rule_script/refs/heads/master/rule/Clash/Global/Global.list"}
+
+  # 4. 国内兜底规则集
+  cn: {<<: *domain, url: "https://gh-proxy.com/raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geosite/cn.mrs"}
+  cn-ip: {<<: *ip, url: "https://gh-proxy.com/raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geoip/cn.mrs"}
+
+# ========================
+# 流量规则 (Rules) - 定义流量分发逻辑
+# 规则从上到下匹配，一旦匹配成功，后续规则不再生效
+# ========================
+rules:
+  - RULE-SET,private,国内
+  - RULE-SET,private-ip,国内,no-resolve
+  - RULE-SET,Custom-Direct,国内
+  - DOMAIN,tvyun10.com,直连
+  - DOMAIN-SUFFIX,tvyun10.com,直连
+  - DOMAIN,dushe03.com,直连
+  - DOMAIN-SUFFIX,dushe03.com,直连
+  - DOMAIN,dushe1.app,直连
+  - DOMAIN-SUFFIX,dushe1.app,直连
+  - DOMAIN,aicoin.com,直连
+  - DOMAIN-SUFFIX,aicoin.com,直连
+  - DOMAIN-REGEX,^tvyun(0[1-9]|1[0-9]|20)\.com$,直连
+  - DOMAIN-REGEX,^dushe(0[1-9]|1[0-9]|20)\.com$,直连
+  - DOMAIN,tvyun\d+\.com,直连
+  - DOMAIN-SUFFIX,tvyun\d+\.com,直连
+  - DOMAIN,dushe\d+\.com,直连
+  - DOMAIN-SUFFIX,dushe\d+\.com,直连
+  - DOMAIN,dushe\d+\.app,直连
+  - DOMAIN-SUFFIX,dushe\d+\.app,直连
+  - RULE-SET,ChinaMax,国内
+  - RULE-SET,category-games@cn,国内
+  - RULE-SET,Steam-CDN,国内
+  - RULE-SET,category-game-platforms-download,国内
+  - RULE-SET,category-public-tracker,国内
+  - RULE-SET,category-ai-!cn,AI
+  - RULE-SET,AI1,AI
+  - RULE-SET,AI2,AI
+  - RULE-SET,category-communication,Telegram
+  - RULE-SET,telegram-ip,Telegram,no-resolve
+  - RULE-SET,category-social-media-!cn,国外
+  - RULE-SET,twitter-ip,国外,no-resolve
+  - RULE-SET,facebook-ip,国外,no-resolve
+  - RULE-SET,github,GitHub
+  - RULE-SET,youtube,YouTube
+  - RULE-SET,TikTok,流媒体
+  - RULE-SET,category-entertainment,流媒体
+  - RULE-SET,google,Google
+  - RULE-SET,google-ip,Google,no-resolve
+  - RULE-SET,apple,美企
+  - RULE-SET,microsoft,美企
+  - RULE-SET,Nvidia,美企
+  - RULE-SET,test,Test
+  - RULE-SET,steam,Game
+  - RULE-SET,category-games,Game
+  - RULE-SET,gfw,国外
+  - RULE-SET,Proxy,国外
+  - RULE-SET,Global,国外
+  - RULE-SET,cn,国内
+  - RULE-SET,cn-ip,国内,no-resolve
+  - RULE-SET,Block,Block
+  - MATCH,国外
