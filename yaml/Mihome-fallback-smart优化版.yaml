@@ -86,10 +86,18 @@ dns:
   enhanced-mode: fake-ip
   fake-ip-range: 198.20.0.1/16
   fake-ip-filter-mode: blacklist
-  nameserver: 
-    # 使用更可靠的DNS服务器
-    - 116.199.0.200
-    - 114.114.114.114
+  default-nameserver:
+    - 223.5.5.5
+    - 119.29.29.29
+  proxy-server-nameserver:
+    - quic://dns.alidns.com/dns-query
+    - https://sm2.doh.pub/dns-query
+  direct-nameserver:
+    - quic://dns.alidns.com/dns-query
+    - https://sm2.doh.pub/dns-query
+  nameserver:
+    - https://dns.google/dns-query
+    - https://dns.cloudflare.com/dns-query
   fake-ip-filter:
     - +.lan
     - +.local
