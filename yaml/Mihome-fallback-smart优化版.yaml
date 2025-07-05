@@ -69,7 +69,7 @@ tproxy-port: 7895
 tun:
   enable: true
   device: utun
-  stack: mixed
+  stack: gvisor
   mtu: 9000
   auto-route: false
   auto-redirect: false
