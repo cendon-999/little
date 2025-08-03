@@ -74,11 +74,14 @@ dns:
   default-nameserver:
     - 119.29.29.29
     - 180.184.1.1
+    - 223.5.5.5
   proxy-server-nameserver: [quic://dns.alidns.com/dns-query, https://sm2.doh.pub/dns-query]
   direct-nameserver: [quic://dns.alidns.com/dns-query, https://sm2.doh.pub/dns-query]
   nameserver:
-    - 202.103.24.68
-    - 202.103.44.150
+    #- 202.103.24.68
+    #- 202.103.44.150
+    - https://dns.alidns.com/dns-query
+    - https://doh.pub/dns-query
   fake-ip-filter:
     # - "rule-set:fake-ip-filter,private_domain,cn_domain"
     - +.qeayr.cn
@@ -294,6 +297,7 @@ rule-providers:
     interval: 86400
     url: https://raw.githubusercontent.com/juewuy/ShellCrash/refs/heads/dev/public/fake_ip_filter.list
     path: ./ruleset/fake_ip_filter.list
+
 
 
 
