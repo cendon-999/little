@@ -11,47 +11,15 @@
 
 # 机场订阅
 proxy-providers:
-  聚合机场:
-    url: "订阅链接4"
-    type: http
-    interval: 86400
-    health-check:
-      enable: true
-      url: https://www.gstatic.com/generate_204
-      interval: 300
-    proxy: 直连
-    override:
-      additional-prefix: "[自建] " # 给此机场机场-B的节点头部加名字，引号内名字可以改。
-
-  Airport_01:
-    url: "订阅链接1"
-    type: http
-    interval: 86400
-    health-check:
-      enable: true
-      url: https://www.gstatic.com/generate_204
-      interval: 300
-    proxy: 直连
-
-  Airport_02:
-    url: "订阅链接2"
-    type: http
-    interval: 86400
-    health-check:
-      enable: true
-      url: https://www.gstatic.com/generate_204
-      interval: 300
-    proxy: 直连
-
-  Airport_03:
-    url: "订阅链接3"
-    type: http
-    interval: 86400
-    health-check:
-      enable: true
-      url: https://www.gstatic.com/generate_204
-      interval: 300
-    proxy: 直连
+  # 优质订阅源 - 优质节点集合，使用时请修改
+  优质服务商: {<<: *BaseProvider, url: '优质订阅源地址1', override: {additional-prefix: '[优] '}}
+  次优服务商: {<<: *BaseProvider, url: '优质订阅源地址2', override: {additional-prefix: '[优] '}} 
+  # 备用订阅源 - 次优节点集合，使用时请修改
+  备用服务商: {<<: *BaseProvider, url: '备用订阅源地址', override: {additional-prefix: '[备] '}}
+  # 自建订阅源 - 自建节点集合，使用时请修改
+  聚合服务商: {<<: *BaseProvider, url: '自建订阅源地址', override: {additional-prefix: '[自建] '}}
+  # 落地订阅源 - 落地服务连接，使用时请修改
+  落地服务商: {<<: *BaseProvider, url: '中转订阅源地址', override: {additional-prefix: '[中] ', dialer-proxy: 中转服务}}
 
 # 多机场复制上方内容后改名字和url订阅链接即可,不能重复
 # 节点信息
@@ -213,6 +181,9 @@ proxy-groups:
   - {name: 自建/家宽节点, type: select, include-all: true, filter: "(?i)(自建|CF|The_house|private|home)", icon: "https://pub-8feead0908f649a8b94397f152fb9cba.r2.dev/private_node.png"}
   - {name: 🌐 游戏节点, type: select, include-all: true}
   - {name: 🌐 全部节点, type: select, include-all: true}
+  
+# 中转服务层 - LoadBalance负载均衡，提供中转服务提升连通性，选用一个或多个服务商做中转，比如 优质服务商，可通过正则表达式，过滤掉不需要的节点，使用时请修改
+  - {name: 中转服务,  <<: *BaseLB, use: [优质服务商], filter: 'Hongkong|香港', hidden: true, icon: https://git.imee.me/https://github.com/Koolson/Qure/raw/master/IconSet/Color/Round_Robin.png}
 
 # 规则匹配
 # 此规则部分没有做防泄露处理，因为弊严重大于利！
@@ -314,4 +285,5 @@ rule-providers:
     interval: 86400
     url: https://raw.githubusercontent.com/juewuy/ShellCrash/refs/heads/dev/public/fake_ip_filter.list
     path: ./ruleset/fake_ip_filter.list
+
 
