@@ -285,9 +285,3 @@ rule-providers:
     interval: 86400
     url: https://raw.githubusercontent.com/juewuy/ShellCrash/refs/heads/dev/public/fake_ip_filter.list
     path: ./ruleset/fake_ip_filter.list
-
-
-
-
-
-
