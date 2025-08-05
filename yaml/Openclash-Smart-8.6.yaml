@@ -1,0 +1,293 @@
+# 七尺宇 + 安格世界，C❄️ OpenClash配置整合-18 , 2025-6-19
+# 七尺宇: https://www.youtube.com/@qichiyu
+# 安格世界: https://www.youtube.com/@Ange-Digital-Life
+# openclash设置和配置教程: https://www.youtube.com/watch?v=S2l_0g4EOHk&t
+# sub-store设置和配置教程: https://www.youtube.com/watch?v=bqEFhWHG0dg
+# 注意规则在满足自己需求情况下，尽量做到精简，不要过度复杂，以免影响性能。
+# ⭐️⭐️如果遇到无法识别smart策略组则，需要更新openclash内核才能使用此配置。SSH连接OpenWrt后，输入下方内容(一定要删掉#   #后面有空格)，然后手动更新。注意手动更新后，，不要在openclash再次更新内核。
+# wget -O smartcore.sh --no-check-certificate https://github.com/666OS/YYDS/raw/main/JS/smartcore.sh && chmod +x smartcore.sh && ./smartcore.sh
+# ⭐️⭐️smart策略组必须要需要模型，下载下方链接内Model.bin（打开链接往下拉能看到）文件放到OpenClash: (/etc/openclash/Model.bin)，如果不想用模型：uselightgbm: true,collectdata: true,  智能策略组的这两个参数改成false
+# https://github.com/vernesong/mihomo/releases
+
+# ==================== 锚点配置 ====================
+# 代理提供者模板 - 订阅源基础配置
+BaseProvider: &BaseProvider {type: http, interval: 86400, proxy: DIRECT, health-check: {enable: true, url: 'https://www.gstatic.com/generate_204', interval: 300}, filter: '^(?!.*(群|邀请|返利|循环|官网|客服|网站|网址|获取|订阅|流量|到期|机场|下次|版本|官址|备用|过期|已用|联系|邮箱|工单|贩卖|通知|倒卖|防止|国内|地址|频道|无法|说明|使用|提示|特别|访问|支持|教程|关注|更新|作者|加入|USE|USED|TOTAL|EXPIRE|EMAIL|Panel|Channel|Author))'}
+
+# 策略组类型模板 - 定义不同的策略组基础配置
+BaseLB: &BaseLB {type: load-balance, interval: 200, lazy: true, url: 'https://www.gstatic.com/generate_204'}
+
+# 节点筛选正则表达式 - 基于地理位置和关键词过滤
+FilterHK: &FilterHK '^(?=.*(?i)(港|🇭🇰|HK|Hong|HKG))(?!.*(法国|欧港专线|俄罗斯|Russia|РФ|🇷🇺|德国|Deutschland|🇩🇪|土耳其|Türkiye|Turkiye|🇹🇷|英国|United Kingdom|UK|Britain|England|🇬🇧|摩尔多瓦|Moldova|MDA|🇲🇩)).*$'
+FilterSG: &FilterSG '^(?=.*(?i)(坡|🇸🇬|SG|Sing|SIN|XSP))(?!.*(排除1|排除2|5x)).*$'
+FilterJP: &FilterJP '^(?=.*(?i)(日|🇯🇵|JP|Japan|NRT|HND|KIX|CTS|FUK))(?!.*(排除1|排除2|5x|尼日利亚|Nigeria)).*$'
+FilterKR: &FilterKR '^(?=.*(?i)(韩|🇰🇷|韓|首尔|南朝鲜|KR|KOR|Korea|South))(?!.*(排除1|排除2|5x|乌克兰|Ukraine|南非|South Africa)).*$'
+FilterUS: &FilterUS '^(?=.*(?i)(美|🇺🇸|US|USA|JFK|LAX|ORD|ATL|DFW|SFO|MIA|SEA|IAD))(?!.*(排除1|排除2|5x|澳大利亚|Australia|亚美尼亚|俄罗斯|Russia)).*$'
+FilterTW: &FilterTW '^(?=.*(?i)(台|🇹🇼|TW|tai|TPE|TSA|KHH))(?!.*(排除1|排除2|5x)).*$'
+FilterEU: &FilterEU '^(?=.*(?i)(奥|比|保|克罗地亚|塞|捷|丹|爱沙|芬|法|德|希|匈|爱尔|意|拉|立|卢|马其它|荷|波|葡|罗|斯洛伐|斯洛文|西|瑞|英|🇧🇪|🇨🇿|🇩🇰|🇫🇮|🇫🇷|🇩🇪|🇮🇪|🇮🇹|🇱🇹|🇱🇺|🇳🇱|🇵🇱|🇸🇪|🇬🇧|CDG|FRA|AMS|MAD|BCN|FCO|MUC|BRU))(?!.*(排除1|排除2|5x)).*$'
+FilterOT: &FilterOT '^(?!.*(DIRECT|美|港|坡|台|新|日|韩|奥|比|保|克罗地亚|塞|捷|丹|爱沙|芬|法|德|希|匈|爱尔|意|拉|立|卢|马其它|荷|波|葡|罗|斯洛伐|斯洛文|西|瑞|英|🇭🇰|🇼🇸|🇹🇼|🇸🇬|🇯🇵|🇰🇷|🇺🇸|🇬🇧|🇦🇹|🇧🇪|🇨🇿|🇩🇰|🇫🇮|🇫🇷|🇩🇪|🇮🇪|🇮🇹|🇱🇹|🇱🇺|🇳🇱|🇵🇱|🇸🇪|HK|TW|SG|JP|KR|US|GB|CDG|FRA|AMS|MAD|BCN|FCO|MUC|BRU|HKG|TPE|TSA|KHH|SIN|XSP|NRT|HND|KIX|CTS|FUK|JFK|LAX|ORD|ATL|DFW|SFO|MIA|SEA|IAD|LHR|LGW)).*$'
+FilterAL: &FilterAL '^(?!.*(DIRECT|群|邀请|返利|循环|官网|客服|网站|网址|获取|订阅|流量|到期|机场|下次|版本|官址|备用|过期|已用|联系|邮箱|工单|贩卖|通知|倒卖|防止|国内|地址|频道|无法|说明|使用|提示|特别|访问|支持|教程|关注|更新|作者|加入|USE|USED|TOTAL|EXPIRE|EMAIL|Panel|Channel|Author)).*$'
+
+# ==================== 其他配置 ====================
+# 机场订阅
+proxy-providers:
+  优质服务商: {<<: *BaseProvider, url: '优质订阅源地址1', override: {additional-prefix: '[优] '}}
+  次优服务商: {<<: *BaseProvider, url: '优质订阅源地址2', override: {additional-prefix: '[优] '}}
+  备用服务商: {<<: *BaseProvider, url: '备用订阅源地址', override: {additional-prefix: '[备] '}}
+  聚合服务商: {<<: *BaseProvider, url: '自建订阅源地址', override: {additional-prefix: '[自建] '}}
+  落地服务商: {<<: *BaseProvider, url: '中转订阅源地址', override: {additional-prefix: '[中] ', dialer-proxy: 中转服务}}
+
+# 节点信息
+proxies:
+  - {name: 直连, type: direct, udp: true}
+
+# 全局配置
+port: 7890
+socks-port: 7891
+redir-port: 7892
+mixed-port: 7893
+tproxy-port: 7895
+
+allow-lan: true
+mode: rule
+log-level: info
+
+ipv6: true
+find-process-mode: 'off'
+global-client-fingerprint: chrome
+keep-alive-idle: 600
+keep-alive-interval: 15
+disable-keep-alive: false
+
+# 控制面板
+external-controller: 0.0.0.0:9090
+external-ui: ui
+external-ui-name: zashboard
+external-ui-url: https://github.com/Zephyruso/zashboard/archive/refs/heads/gh-pages.zip
+secret: "123456"
+
+# DNS模块
+dns:
+  enable: true
+  listen: 0.0.0.0:7874
+  ipv6: true
+  prefer-h3: false
+  respect-rules: true
+  enhanced-mode: fake-ip
+  fake-ip-range: 198.20.0.1/16
+  default-nameserver:
+    - 119.29.29.29
+    - 180.184.1.1
+  proxy-server-nameserver: [quic://dns.alidns.com/dns-query, https://sm2.doh.pub/dns-query]
+  direct-nameserver: [quic://dns.alidns.com/dns-query, https://sm2.doh.pub/dns-query]
+  nameserver:
+    - 202.103.24.68
+    - 202.103.44.150
+    #- https://dns.alidns.com/dns-query
+    #- https://doh.pub/dns-query
+  fake-ip-filter:
+    - +.qeayr.cn
+    - +.saojc.xyz
+    - +.sssyun.xyz
+    - +.dler.cloud
+    - +.0tk8a3a1q4t94dler.com
+    - +.aerianas.top
+    - '*.lan'
+    - '*.local'
+    - 'time.*.com'
+    - '*.steamcontent.com'
+    - '*.nflxvideo.net'
+    - '*.bt-tracker.*'
+    - 'localhost'
+    - '*.msftconnecttest.com'
+    - '*.miwifi.com'
+
+# 入站
+tun:
+  enable: true
+  stack: gvisor
+  device: utun
+  endpoint-independent-nat: true
+  auto-route: false
+  auto-detect-interface: false
+  auto-redirect: false
+  strict-route: false
+
+profile:
+  store-selected: true
+  store-fake-ip: true
+
+# 出站策略
+pr: &pr {type: select, proxies: [默认代理, 香港自动, 日本自动, 美国自动, 新国自动, 韩国自动, 台湾自动, 欧洲自动, 香港智能, 日本智能, 美国智能, 新国智能, 韩国智能, 台湾智能, 欧洲智能, 港区-稳定IP, 日本-稳定IP, 美国-稳定IP, 新国-稳定IP, 韩国-稳定IP, 台湾-稳定IP, 欧洲-稳定IP, 香港节点, 日本节点, 新国节点, 美国节点, 韩国节点, 台湾节点, 欧洲节点, 香港故转, 日本故转, 美国故转, 新国故转, 韩国故转, 台湾故转, 欧洲故转, 其他节点, 自建/家宽节点, 全部节点, 直连]}
+pr_b: &pr_b {type: select, proxies: [香港自动, 日本自动, 美国自动, 新国自动, 韩国自动, 台湾自动, 欧洲自动, 香港智能, 日本智能, 美国智能, 新国智能, 韩国智能, 台湾智能, 欧洲智能, 港区-稳定IP, 日本-稳定IP, 美国-稳定IP, 新国-稳定IP, 韩国-稳定IP, 台湾-稳定IP, 欧洲-稳定IP, 香港节点, 日本节点, 新国节点, 美国节点, 韩国节点, 台湾节点, 欧洲节点, 香港故转, 日本故转, 美国故转, 新国故转, 韩国故转, 台湾故转, 欧洲故转, 其他节点, 自建/家宽节点, 全部节点, 直连]}
+pr_c: &pr_c {type: select, proxies: [直连, 香港自动, 日本自动, 美国自动, 新国自动, 韩国自动, 台湾自动, 欧洲自动, 香港智能, 日本智能, 美国智能, 新国智能, 韩国智能, 台湾智能, 欧洲智能, 港区-稳定IP, 日本-稳定IP, 美国-稳定IP, 新国-稳定IP, 韩国-稳定IP, 台湾-稳定IP, 欧洲-稳定IP, 香港节点, 日本节点, 新国节点, 美国节点, 韩国节点, 台湾节点, 欧洲节点, 香港故转, 日本故转, 美国故转, 新国故转, 韩国故转, 台湾故转, 欧洲故转, 其他节点, 自建/家宽节点, 全部节点]}
+
+proxy-groups:
+  - {name: 默认代理, <<: *pr_b, icon: https://raw.githubusercontent.com/lige47/QuanX-icon-rule/main/icon/proxy.png}
+  - {name: Ai, type: select, include-all: true, proxies: [默认代理, 香港自动, 日本自动, 美国自动, 新国自动, 韩国自动, 台湾自动, 欧洲自动, 香港智能, 日本智能, 美国智能, 新国智能, 韩国智能, 台湾智能, 欧洲智能, 港区-稳定IP, 日本-稳定IP, 美国-稳定IP, 新国-稳定IP, 韩国-稳定IP, 台湾-稳定IP, 欧洲-稳定IP, 香港节点, 日本节点, 新国节点, 美国节点, 韩国节点, 台湾节点, 欧洲节点, 香港故转, 日本故转, 美国故转, 新国故转, 韩国故转, 台湾故转, 欧洲故转, 其他节点, 自建/家宽节点, 全部节点], icon: https://raw.githubusercontent.com/lige47/QuanX-icon-rule/main/icon/AI.png}
+  - {name: Telegram, type: select, include-all: true, proxies: [默认代理, 香港自动, 日本自动, 美国自动, 新国自动, 韩国自动, 台湾自动, 欧洲自动, 香港智能, 日本智能, 美国智能, 新国智能, 韩国智能, 台湾智能, 欧洲智能, 港区-稳定IP, 日本-稳定IP, 美国-稳定IP, 新国-稳定IP, 韩国-稳定IP, 台湾-稳定IP, 欧洲-稳定IP, 香港节点, 日本节点, 新国节点, 美国节点, 韩国节点, 台湾节点, 欧洲节点, 香港故转, 日本故转, 美国故转, 新国故转, 韩国故转, 台湾故转, 欧洲故转, 其他节点, 自建/家宽节点, 全部节点], icon: https://raw.githubusercontent.com/lige47/QuanX-icon-rule/main/icon/telegram.png}
+  - {name: YouTube, <<: *pr, icon: https://raw.githubusercontent.com/lige47/QuanX-icon-rule/main/icon/youtube.png}
+  - {name: Google, <<: *pr, icon: https://raw.githubusercontent.com/lige47/QuanX-icon-rule/main/icon/google.png}
+  - {name: Twitter(X), <<: *pr, icon: https://raw.githubusercontent.com/lige47/QuanX-icon-rule/main/icon/twitter.png}
+  - {name: GitHub, <<: *pr, icon: https://raw.githubusercontent.com/lige47/QuanX-icon-rule/main/icon/github.png}
+  - {name: TikTok, <<: *pr, icon: https://raw.githubusercontent.com/lige47/QuanX-icon-rule/main/icon/tiktok.png}
+  - {name: NETFLIX, <<: *pr, icon: https://raw.githubusercontent.com/lige47/QuanX-icon-rule/main/icon/netflix.png}
+  - {name: Disney, <<: *pr, icon: https://raw.githubusercontent.com/lige47/QuanX-icon-rule/main/icon/disney.png}
+  - {name: HBO, <<: *pr, icon: https://raw.githubusercontent.com/lige47/QuanX-icon-rule/main/icon/hbo.png}
+  - {name: Emby, <<: *pr_c, icon: https://raw.githubusercontent.com/lige47/QuanX-icon-rule/main/icon/emby.png}
+  - {name: Instagram, <<: *pr, icon: https://raw.githubusercontent.com/lige47/QuanX-icon-rule/main/icon/instagram.png}
+  - {name: WhatsApp, <<: *pr, icon: https://raw.githubusercontent.com/lige47/QuanX-icon-rule/main/icon/wechat.png}
+  - {name: Facebook, <<: *pr, icon: https://raw.githubusercontent.com/lige47/QuanX-icon-rule/main/icon/facebook.png}
+  - {name: OneDrive, <<: *pr_c, icon: https://raw.githubusercontent.com/lige47/QuanX-icon-rule/main/icon/onedrive.png}
+  - {name: Microsoft, <<: *pr_c, icon: https://raw.githubusercontent.com/lige47/QuanX-icon-rule/main/icon/microsoft.png}
+  - {name: Speedtest, type: select, include-all: true, icon: https://raw.githubusercontent.com/lige47/QuanX-icon-rule/main/icon/speedtest.png}
+  - {name: PayPal, <<: *pr, icon: https://raw.githubusercontent.com/lige47/QuanX-icon-rule/main/icon/paypal.png}
+  - {name: GameDownload, <<: *pr_c, icon: https://raw.githubusercontent.com/lige47/QuanX-icon-rule/main/icon/game.png}
+  - {name: Steam, <<: *pr, icon: https://raw.githubusercontent.com/lige47/QuanX-icon-rule/main/icon/steam.png}
+  - {name: Game, <<: *pr, icon: https://raw.githubusercontent.com/lige47/QuanX-icon-rule/main/icon/game.png}
+  - {name: Apple, <<: *pr_c, icon: https://raw.githubusercontent.com/lige47/QuanX-icon-rule/main/icon/apple.png}
+  - {name: 漏网之鱼, type: select, include-all: true, proxies: [默认代理, 香港自动, 日本自动, 美国自动, 新国自动, 韩国自动, 台湾自动, 欧洲自动, 香港智能, 日本智能, 美国智能, 新国智能, 韩国智能, 台湾智能, 欧洲智能, 港区-稳定IP, 日本-稳定IP, 美国-稳定IP, 新国-稳定IP, 韩国-稳定IP, 台湾-稳定IP, 欧洲-稳定IP, 香港节点, 日本节点, 新国节点, 美国节点, 韩国节点, 台湾节点, 欧洲节点, 香港故转, 日本故转, 美国故转, 新国故转, 韩国故转, 台湾故转, 欧洲故转, 其他节点, 自建/家宽节点, 全部节点], icon: https://raw.githubusercontent.com/lige47/QuanX-icon-rule/main/icon/final.png}
+
+  - {name: 香港自动, type: url-test, include-all: true, tolerance: 20, interval: 300, filter: *FilterHK, icon: https://raw.githubusercontent.com/lige47/QuanX-icon-rule/main/icon/hongkong.png}
+  - {name: 日本自动, type: url-test, include-all: true, tolerance: 20, interval: 300, filter: *FilterJP, icon: https://raw.githubusercontent.com/lige47/QuanX-icon-rule/main/icon/japan.png}
+  - {name: 美国自动, type: url-test, include-all: true, tolerance: 20, interval: 300, filter: *FilterUS, icon: https://raw.githubusercontent.com/lige47/QuanX-icon-rule/main/icon/usa.png}
+  - {name: 新国自动, type: url-test, include-all: true, tolerance: 20, interval: 300, filter: *FilterSG, icon: https://raw.githubusercontent.com/lige47/QuanX-icon-rule/main/icon/singapore.png}
+  - {name: 韩国自动, type: url-test, include-all: true, tolerance: 20, interval: 300, filter: *FilterKR, icon: https://raw.githubusercontent.com/lige47/QuanX-icon-rule/main/icon/korea.png}
+  - {name: 台湾自动, type: url-test, include-all: true, tolerance: 20, interval: 300, filter: *FilterTW, icon: https://raw.githubusercontent.com/lige47/QuanX-icon-rule/main/icon/taiwan.png}
+  - {name: 欧洲自动, type: url-test, include-all: true, tolerance: 20, interval: 300, filter: *FilterEU, icon: https://raw.githubusercontent.com/lige47/QuanX-icon-rule/main/icon/europe.png}
+
+  - {name: 香港智能, type: smart, include-all: true, tolerance: 20, interval: 300, uselightgbm: true, collectdata: true, filter: *FilterHK, url: "http://www.gstatic.com/generate_204", lazy: true, persistent: true, icon: https://raw.githubusercontent.com/lige47/QuanX-icon-rule/main/icon/hongkong.png}
+  - {name: 日本智能, type: smart, include-all: true, tolerance: 20, interval: 300, uselightgbm: true, collectdata: true, filter: *FilterJP, url: "http://www.gstatic.com/generate_204", lazy: true, persistent: true, icon: https://raw.githubusercontent.com/lige47/QuanX-icon-rule/main/icon/japan.png}
+  - {name: 美国智能, type: smart, include-all: true, tolerance: 20, interval: 300, uselightgbm: true, collectdata: true, filter: *FilterUS, url: "http://www.gstatic.com/generate_204", lazy: true, persistent: true, icon: https://raw.githubusercontent.com/lige47/QuanX-icon-rule/main/icon/usa.png}
+  - {name: 新国智能, type: smart, include-all: true, tolerance: 20, interval: 300, uselightgbm: true, collectdata: true, filter: *FilterSG, url: "http://www.gstatic.com/generate_204", lazy: true, persistent: true, icon: https://raw.githubusercontent.com/lige47/QuanX-icon-rule/main/icon/singapore.png}
+  - {name: 韩国智能, type: smart, include-all: true, tolerance: 20, interval: 300, uselightgbm: true, collectdata: true, filter: *FilterKR, url: "http://www.gstatic.com/generate_204", lazy: true, persistent: true, icon: https://raw.githubusercontent.com/lige47/QuanX-icon-rule/main/icon/korea.png}
+  - {name: 台湾智能, type: smart, include-all: true, tolerance: 20, interval: 300, uselightgbm: true, collectdata: true, filter: *FilterTW, url: "http://www.gstatic.com/generate_204", lazy: true, persistent: true, icon: https://raw.githubusercontent.com/lige47/QuanX-icon-rule/main/icon/taiwan.png}
+  - {name: 欧洲智能, type: smart, include-all: true, tolerance: 20, interval: 300, uselightgbm: true, collectdata: true, filter: *FilterEU, url: "http://www.gstatic.com/generate_204", lazy: true, persistent: true, icon: https://raw.githubusercontent.com/lige47/QuanX-icon-rule/main/icon/europe.png}
+
+  - {name: 港区-稳定IP, type: fallback, tolerance: 30, interval: 150, lazy: false, proxies: [香港节点, 香港智能], icon: https://raw.githubusercontent.com/lige47/QuanX-icon-rule/main/icon/hongkong.png}
+  - {name: 日本-稳定IP, type: fallback, tolerance: 30, interval: 150, lazy: false, proxies: [日本节点, 日本智能], icon: https://raw.githubusercontent.com/lige47/QuanX-icon-rule/main/icon/japan.png}
+  - {name: 美国-稳定IP, type: fallback, tolerance: 30, interval: 150, lazy: false, proxies: [美国节点, 美国智能], icon: https://raw.githubusercontent.com/lige47/QuanX-icon-rule/main/icon/usa.png}
+  - {name: 新国-稳定IP, type: fallback, tolerance: 30, interval: 150, lazy: false, proxies: [新国节点, 新国智能], icon: https://raw.githubusercontent.com/lige47/QuanX-icon-rule/main/icon/singapore.png}
+  - {name: 韩国-稳定IP, type: fallback, tolerance: 30, interval: 150, lazy: false, proxies: [韩国节点, 韩国智能], icon: https://raw.githubusercontent.com/lige47/QuanX-icon-rule/main/icon/korea.png}
+  - {name: 台湾-稳定IP, type: fallback, tolerance: 30, interval: 150, lazy: false, proxies: [台湾节点, 台湾智能], icon: https://raw.githubusercontent.com/lige47/QuanX-icon-rule/main/icon/taiwan.png}
+  - {name: 欧洲-稳定IP, type: fallback, tolerance: 30, interval: 150, lazy: false, proxies: [欧洲节点, 欧洲智能], icon: https://raw.githubusercontent.com/lige47/QuanX-icon-rule/main/icon/europe.png}
+
+  - {name: 香港节点, type: select, include-all: true, filter: *FilterHK, icon: https://raw.githubusercontent.com/lige47/QuanX-icon-rule/main/icon/hongkong.png}
+  - {name: 日本节点, type: select, include-all: true, filter: *FilterJP, icon: https://raw.githubusercontent.com/lige47/QuanX-icon-rule/main/icon/japan.png}
+  - {name: 美国节点, type: select, include-all: true, filter: *FilterUS, icon: https://raw.githubusercontent.com/lige47/QuanX-icon-rule/main/icon/usa.png}
+  - {name: 新国节点, type: select, include-all: true, filter: *FilterSG, icon: https://raw.githubusercontent.com/lige47/QuanX-icon-rule/main/icon/singapore.png}
+  - {name: 韩国节点, type: select, include-all: true, filter: *FilterKR, icon: https://raw.githubusercontent.com/lige47/QuanX-icon-rule/main/icon/korea.png}
+  - {name: 台湾节点, type: select, include-all: true, filter: *FilterTW, icon: https://raw.githubusercontent.com/lige47/QuanX-icon-rule/main/icon/taiwan.png}
+  - {name: 欧洲节点, type: select, include-all: true, filter: *FilterEU, icon: https://raw.githubusercontent.com/lige47/QuanX-icon-rule/main/icon/europe.png}
+
+  - {name: 香港故转, type: fallback, include-all: true, tolerance: 20, interval: 300, filter: *FilterHK, icon: https://raw.githubusercontent.com/lige47/QuanX-icon-rule/main/icon/hongkong.png}
+  - {name: 日本故转, type: fallback, include-all: true, tolerance: 20, interval: 300, filter: *FilterJP, icon: https://raw.githubusercontent.com/lige47/QuanX-icon-rule/main/icon/japan.png}
+  - {name: 美国故转, type: fallback, include-all: true, tolerance: 20, interval: 300, filter: *FilterUS, icon: https://raw.githubusercontent.com/lige47/QuanX-icon-rule/main/icon/usa.png}
+  - {name: 新国故转, type: fallback, include-all: true, tolerance: 20, interval: 300, filter: *FilterSG, icon: https://raw.githubusercontent.com/lige47/QuanX-icon-rule/main/icon/singapore.png}
+  - {name: 韩国故转, type: fallback, include-all: true, tolerance: 20, interval: 300, filter: *FilterKR, icon: https://raw.githubusercontent.com/lige47/QuanX-icon-rule/main/icon/korea.png}
+  - {name: 台湾故转, type: fallback, include-all: true, tolerance: 20, interval: 300, filter: *FilterTW, icon: https://raw.githubusercontent.com/lige47/QuanX-icon-rule/main/icon/taiwan.png}
+  - {name: 欧洲故转, type: fallback, include-all: true, tolerance: 20, interval: 300, filter: *FilterEU, icon: https://raw.githubusercontent.com/lige47/QuanX-icon-rule/main/icon/europe.png}
+
+  - {name: 其他节点, type: select, include-all: true, filter: *FilterOT, icon: https://raw.githubusercontent.com/lige47/QuanX-icon-rule/main/icon/global.png}
+  - {name: 自建/家宽节点, type: select, include-all: true, filter: "(?i)(自建|CF|The_house|private|home)", icon: "https://raw.githubusercontent.com/lige47/QuanX-icon-rule/main/icon/private.png"}
+  - {name: 游戏节点, type: select, include-all: true, icon: https://raw.githubusercontent.com/lige47/QuanX-icon-rule/main/icon/game.png}
+  - {name: 全部节点, type: select, include-all: true, filter: *FilterAL, icon: https://raw.githubusercontent.com/lige47/QuanX-icon-rule/main/icon/global.png}
+
+  - {name: 中转服务, <<: *BaseLB, use: [次优服务商], filter: '新加坡', hidden: true, icon: https://raw.githubusercontent.com/lige47/QuanX-icon-rule/main/icon/roundrobin.png}
+
+# 规则匹配
+rules:
+  - DOMAIN-SUFFIX,cod-assets.cdn.callofduty.com,游戏节点
+  - DOMAIN-SUFFIX,genesis.stun.us.demonware.net,游戏节点
+  - DOMAIN-SUFFIX,sapphire-lobby.prod.demonware.net,游戏节点
+  - DOMAIN-SUFFIX,ingest.datax.activision.com,游戏节点
+  - RULE-SET,private_domain,直连
+  - RULE-SET,apple_domain,Apple
+  - RULE-SET,proxylite,默认代理
+  - RULE-SET,ai,Ai
+  - RULE-SET,telegram_domain,Telegram
+  - RULE-SET,youtube_domain,YouTube
+  - RULE-SET,google_domain,Google
+  - RULE-SET,Twitter_domain,Twitter(X)
+  - RULE-SET,github_domain,GitHub
+  - RULE-SET,tiktok_domain,TikTok
+  - RULE-SET,netflix_domain,NETFLIX
+  - RULE-SET,Disney_domain,Disney
+  - RULE-SET,HBO_domain,HBO
+  - RULE-SET,Emby_domain-1,Emby
+  - RULE-SET,Instagram_domain,Instagram
+  - RULE-SET,WhatsApp_domain,WhatsApp
+  - RULE-SET,Facebook_domain,Facebook
+  - RULE-SET,GameDownload_domain-1,GameDownload
+  - RULE-SET,GameDownload_domain-2,GameDownload
+  - RULE-SET,Steam_domain,Steam
+  - RULE-SET,Epic_domain,Game
+  - RULE-SET,EA_domain,Game
+  - RULE-SET,Blizzard_domain,Game
+  - RULE-SET,UBI_domain,Game
+  - RULE-SET,Sony_domain,Game
+  - RULE-SET,Nintend_domain,Game
+  - RULE-SET,onedrive_domain,OneDrive
+  - RULE-SET,microsoft_domain,Microsoft
+  - RULE-SET,speedtest_domain,Speedtest
+  - RULE-SET,paypal_domain,PayPal
+  - RULE-SET,gfw_domain,默认代理
+  - RULE-SET,geolocation-!cn,默认代理
+  - RULE-SET,cn_domain,直连
+  - RULE-SET,google_ip,Google,no-resolve
+  - RULE-SET,netflix_ip,NETFLIX,no-resolve
+  - RULE-SET,telegram_ip,Telegram,no-resolve
+  - RULE-SET,cn_ip,直连
+  - MATCH,漏网之鱼
+
+# 规则集
+rule-anchor:
+  ip: &ip {type: http, interval: 86400, behavior: ipcidr, format: mrs}
+  domain: &domain {type: http, interval: 86400, behavior: domain, format: mrs}
+  class: &class {type: http, interval: 86400, behavior: classical, format: text}
+
+rule-providers:
+  private_domain: { <<: *domain, url: "https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geosite/private.mrs"}
+  proxylite: { <<: *class, url: "https://raw.githubusercontent.com/qichiyuhub/rule/refs/heads/main/proxy.list"}
+  ai: {  <<: *domain, url: "https://github.com/MetaCubeX/meta-rules-dat/raw/refs/heads/meta/geo/geosite/category-ai-!cn.mrs" }
+  youtube_domain: { <<: *domain, url: "https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geosite/youtube.mrs"}
+  google_domain: { <<: *domain, url: "https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geosite/google.mrs"}
+  Twitter_domain: {<<: *domain, url: "https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geosite/x.mrs"}
+  Disney_domain: {<<: *domain, url: "https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geosite/disney.mrs"}
+  Instagram_domain: {<<: *domain, url: "https://github.com/MetaCubeX/meta-rules-dat/raw/refs/heads/meta/geo/geosite/instagram.mrs"}
+  WhatsApp_domain: {<<: *class, url: "https://raw.githubusercontent.com/blackmatrix7/ios_rule_script/refs/heads/master/rule/Clash/Whatsapp/Whatsapp.list"}
+  Facebook_domain: {<<: *domain, url: "https://github.com/MetaCubeX/meta-rules-dat/raw/refs/heads/meta/geo/geosite/facebook.mrs"}
+  GameDownload_domain-1: {<<: *class, url: "https://raw.githubusercontent.com/blackmatrix7/ios_rule_script/refs/heads/master/rule/Clash/Game/GameDownload/GameDownload.list"}
+  GameDownload_domain-2: {<<: *class, url: "https://raw.githubusercontent.com/blackmatrix7/ios_rule_script/refs/heads/master/rule/Clash/SteamCN/SteamCN.list"}
+  Steam_domain: {<<: *domain, url: "https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geosite/steam.mrs"}
+  Epic_domain: {<<: *class, url: "https://raw.githubusercontent.com/blackmatrix7/ios_rule_script/master/rule/Clash/Epic/Epic.list"}
+  EA_domain: {<<: *class, url: "https://raw.githubusercontent.com/blackmatrix7/ios_rule_script/master/rule/Clash/EA/EA.list"}
+  Blizzard_domain: {<<: *class, url: "https://raw.githubusercontent.com/blackmatrix7/ios_rule_script/master/rule/Clash/Blizzard/Blizzard.list"}
+  UBI_domain: {<<: *class, url: "https://raw.githubusercontent.com/blackmatrix7/ios_rule_script/master/rule/Clash/UBI/UBI.list"}
+  Sony_domain: {<<: *class, url: "https://raw.githubusercontent.com/blackmatrix7/ios_rule_script/master/rule/Clash/Sony/Sony.list"}
+  Nintend_domain: {<<: *class, url: "https://raw.githubusercontent.com/blackmatrix7/ios_rule_script/master/rule/Clash/Nintendo/Nintendo.list"}
+  github_domain: { <<: *domain, url: "https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geosite/github.mrs"}
+  telegram_domain: { <<: *domain, url: "https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geosite/telegram.mrs"}
+  netflix_domain: { <<: *domain, url: "https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geosite/netflix.mrs"}
+  HBO_domain: {<<: *domain, url: "https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geosite/hbo.mrs"}
+  Emby_domain-1: {<<: *class, url: "https://raw.githubusercontent.com/cendon-999/Rules/refs/heads/main/rules/Domain/emby.list"}
+  paypal_domain: { <<: *domain, url: "https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geosite/paypal.mrs"}
+  onedrive_domain: { <<: *domain, url: "https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geosite/onedrive.mrs"}
+  microsoft_domain: { <<: *domain, url: "https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geosite/microsoft.mrs"}
+  apple_domain: { <<: *domain, url: "https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geosite/apple-cn.mrs"}
+  speedtest_domain: { <<: *domain, url: "https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geosite/ookla-speedtest.mrs"}
+  tiktok_domain: { <<: *domain, url: "https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geosite/tiktok.mrs"}
+  gfw_domain: { <<: *domain, url: "https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geosite/gfw.mrs"}
+  geolocation-!cn: { <<: *domain, url: "https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geosite/geolocation-!cn.mrs"}
+  cn_domain: { <<: *domain, url: "https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geosite/cn.mrs"}
+  cn_ip: { <<: *ip, url: "https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geoip/cn.mrs"}
+  google_ip: { <<: *ip, url: "https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geoip/google.mrs"}
+  telegram_ip: { <<: *ip, url: "https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geoip/telegram.mrs"}
+  netflix_ip: { <<: *ip, url: "https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geoip/netflix.mrs"}
+
+
+
+
+
+
+
+
