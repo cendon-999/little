@@ -154,7 +154,6 @@ proxy-groups:
   - {name: 韩国自动, type: url-test, include-all: true, tolerance: 20, interval: 300, filter: *FilterKR, icon: https://git.imee.me/https://github.com/Koolson/Qure/raw/master/IconSet/Color/Korea.png}
   - {name: 台湾自动, type: url-test, include-all: true, tolerance: 20, interval: 300, filter: *FilterTW, icon: https://git.imee.me/https://github.com/Koolson/Qure/raw/master/IconSet/Color/Taiwan.png}
   - {name: 欧洲自动, type: url-test, include-all: true, tolerance: 20, interval: 300, filter: *FilterEU, icon: https://git.imee.me/https://github.com/Koolson/Qure/raw/master/IconSet/Color/European_Union.png}
-  #- {name: 自动选择, type: url-test, include-all: true, tolerance: 20, interval: 300, filter: *FilterAL, icon: https://git.imee.me/https://github.com/Koolson/Qure/raw/master/IconSet/Color/Round_Robin_1.png}
   
   - {name: 香港智能, type: smart, include-all: true, tolerance: 20, interval: 300, uselightgbm: true, collectdata: true, filter: *FilterHK, url: "http://www.gstatic.com/generate_204", lazy: true, persistent: true, icon: https://git.imee.me/https://github.com/Koolson/Qure/raw/master/IconSet/Color/Hong_Kong.png}
   - {name: 日本智能, type: smart, include-all: true, tolerance: 20, interval: 300, uselightgbm: true, collectdata: true, filter: *FilterJP, url: "http://www.gstatic.com/generate_204", lazy: true, persistent: true, icon: https://git.imee.me/https://github.com/Koolson/Qure/raw/master/IconSet/Color/Japan.png}
@@ -193,7 +192,7 @@ proxy-groups:
   - {name: 游戏节点, type: select, include-all: true, icon: https://git.imee.me/https://github.com/Koolson/Qure/raw/master/IconSet/Color/Game.png}
   - {name: 全部节点, type: select, include-all: true, filter: *FilterAL, icon: https://git.imee.me/https://github.com/Koolson/Qure/raw/master/IconSet/Color/Global.png}
 
-  - {name: 中转服务, <<: *BaseLB, use: [次优服务商], filter: 'Hongkong|香港', hidden: true, icon: https://git.imee.me/https://github.com/Koolson/Qure/raw/master/IconSet/Color/Round_Robin.png}
+  - {name: 中转服务, <<: *BaseLB, use: [次优服务商], filter: '新加坡', hidden: true, icon: https://git.imee.me/https://github.com/Koolson/Qure/raw/master/IconSet/Color/Round_Robin.png}
 
 # 规则匹配
 rules:
@@ -218,8 +217,8 @@ rules:
   - RULE-SET,GameDownload_domain-1,Game
   - RULE-SET,GameDownload_domain-2,Game
   - RULE-SET,Steam_domain,Steam
-  #- RULE-SET,Games_domain,Game
   - RULE-SET,Epic_domain,Game
+  - RULE-SET,EA_domain,Game
   - RULE-SET,Blizzard_domain,Game
   - RULE-SET,UBI_domain,Game
   - RULE-SET,Sony_domain,Game
@@ -257,7 +256,6 @@ rule-providers:
   GameDownload_domain-1: {<<: *class, url: "https://raw.githubusercontent.com/blackmatrix7/ios_rule_script/refs/heads/master/rule/Clash/Game/GameDownload/GameDownload.list"}
   GameDownload_domain-2: {<<: *class, url: "https://raw.githubusercontent.com/blackmatrix7/ios_rule_script/refs/heads/master/rule/Clash/SteamCN/SteamCN.list"}
   Steam_domain: {<<: *domain, url: "https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geosite/steam.mrs"}
-  #Games_domain: {<<: *domain, url: "https://git.imee.me/https://github.com/666OS/rules/raw/release/mihomo/domain/Games.mrs"}
   Epic_domain: {<<: *class, url: "https://raw.githubusercontent.com/blackmatrix7/ios_rule_script/master/rule/Clash/Epic/Epic.list"}
   EA_domain: {<<: *class, url: "https://raw.githubusercontent.com/blackmatrix7/ios_rule_script/master/rule/Clash/EA/EA.list"}
   Blizzard_domain: {<<: *class, url: "https://raw.githubusercontent.com/blackmatrix7/ios_rule_script/master/rule/Clash/Blizzard/Blizzard.list"}
@@ -282,13 +280,3 @@ rule-providers:
   google_ip: { <<: *ip, url: "https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geoip/google.mrs"}
   telegram_ip: { <<: *ip, url: "https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geoip/telegram.mrs"}
   netflix_ip: { <<: *ip, url: "https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geoip/netflix.mrs"}
-
-
-
-
-
-
-
-
-
-
