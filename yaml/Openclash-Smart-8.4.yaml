@@ -116,14 +116,14 @@ profile:
   store-fake-ip: true
 
 # 出站策略
-pr: &pr {type: select, proxies: [默认代理, 香港自动, 日本自动, 美国自动, 新国自动, 韩国自动, 台湾自动, 欧洲自动, 自动选择, 香港智能, 日本智能, 美国智能, 新国智能, 韩国智能, 台湾智能, 欧洲智能, 港区-稳定IP, 日本-稳定IP, 美国-稳定IP, 新国-稳定IP, 韩国-稳定IP, 台湾-稳定IP, 欧洲-稳定IP, 香港节点, 日本节点, 新国节点, 美国节点, 韩国节点, 台湾节点, 欧洲节点, 香港故转, 日本故转, 美国故转, 新国故转, 韩国故转, 台湾故转, 欧洲故转, 其他节点, 自建/家宽节点, 全部节点]}
-pr_b: &pr_b {type: select, proxies: [香港自动, 日本自动, 美国自动, 新国自动, 韩国自动, 台湾自动, 欧洲自动, 自动选择, 香港智能, 日本智能, 美国智能, 新国智能, 韩国智能, 台湾智能, 欧洲智能, 港区-稳定IP, 日本-稳定IP, 美国-稳定IP, 新国-稳定IP, 韩国-稳定IP, 台湾-稳定IP, 欧洲-稳定IP, 香港节点, 日本节点, 新国节点, 美国节点, 韩国节点, 台湾节点, 欧洲节点, 香港故转, 日本故转, 美国故转, 新国故转, 韩国故转, 台湾故转, 欧洲故转, 其他节点, 自建/家宽节点, 全部节点]}
-pr_c: &pr_c {type: select, proxies: [直连, 香港自动, 日本自动, 美国自动, 新国自动, 韩国自动, 台湾自动, 欧洲自动, 自动选择, 香港智能, 日本智能, 美国智能, 新国智能, 韩国智能, 台湾智能, 欧洲智能, 港区-稳定IP, 日本-稳定IP, 美国-稳定IP, 新国-稳定IP, 韩国-稳定IP, 台湾-稳定IP, 欧洲-稳定IP, 香港节点, 日本节点, 新国节点, 美国节点, 韩国节点, 台湾节点, 欧洲节点, 香港故转, 日本故转, 美国故转, 新国故转, 韩国故转, 台湾故转, 欧洲故转, 其他节点, 自建/家宽节点, 全部节点]}
+pr: &pr {type: select, proxies: [默认代理, 香港自动, 日本自动, 美国自动, 新国自动, 韩国自动, 台湾自动, 欧洲自动, 香港智能, 日本智能, 美国智能, 新国智能, 韩国智能, 台湾智能, 欧洲智能, 港区-稳定IP, 日本-稳定IP, 美国-稳定IP, 新国-稳定IP, 韩国-稳定IP, 台湾-稳定IP, 欧洲-稳定IP, 香港节点, 日本节点, 新国节点, 美国节点, 韩国节点, 台湾节点, 欧洲节点, 香港故转, 日本故转, 美国故转, 新国故转, 韩国故转, 台湾故转, 欧洲故转, 其他节点, 自建/家宽节点, 全部节点]}
+pr_b: &pr_b {type: select, proxies: [香港自动, 日本自动, 美国自动, 新国自动, 韩国自动, 台湾自动, 欧洲自动, 香港智能, 日本智能, 美国智能, 新国智能, 韩国智能, 台湾智能, 欧洲智能, 港区-稳定IP, 日本-稳定IP, 美国-稳定IP, 新国-稳定IP, 韩国-稳定IP, 台湾-稳定IP, 欧洲-稳定IP, 香港节点, 日本节点, 新国节点, 美国节点, 韩国节点, 台湾节点, 欧洲节点, 香港故转, 日本故转, 美国故转, 新国故转, 韩国故转, 台湾故转, 欧洲故转, 其他节点, 自建/家宽节点, 全部节点]}
+pr_c: &pr_c {type: select, proxies: [直连, 香港自动, 日本自动, 美国自动, 新国自动, 韩国自动, 台湾自动, 欧洲自动, 香港智能, 日本智能, 美国智能, 新国智能, 韩国智能, 台湾智能, 欧洲智能, 港区-稳定IP, 日本-稳定IP, 美国-稳定IP, 新国-稳定IP, 韩国-稳定IP, 台湾-稳定IP, 欧洲-稳定IP, 香港节点, 日本节点, 新国节点, 美国节点, 韩国节点, 台湾节点, 欧洲节点, 香港故转, 日本故转, 美国故转, 新国故转, 韩国故转, 台湾故转, 欧洲故转, 其他节点, 自建/家宽节点, 全部节点]}
 
 proxy-groups:
   - {name: 默认代理, <<: *pr_b, icon: https://git.imee.me/https://github.com/666OS/YYDS/raw/main/mihomo/image/mihomo.png}
-  - {name: Ai, type: select, include-all: true, proxies: [默认代理, 香港自动, 日本自动, 美国自动, 新国自动, 韩国自动, 台湾自动, 欧洲自动, 自动选择, 香港智能, 日本智能, 美国智能, 新国智能, 韩国智能, 台湾智能, 欧洲智能, 港区-稳定IP, 日本-稳定IP, 美国-稳定IP, 新国-稳定IP, 韩国-稳定IP, 台湾-稳定IP, 欧洲-稳定IP, 香港节点, 日本节点, 新国节点, 美国节点, 韩国节点, 台湾节点, 欧洲节点, 香港故转, 日本故转, 美国故转, 新国故转, 韩国故转, 台湾故转, 欧洲故转, 其他节点, 自建/家宽节点, 全部节点], icon: https://git.imee.me/https://github.com/Koolson/Qure/raw/master/IconSet/Color/AI.png}
-  - {name: Telegram, type: select, include-all: true, proxies: [默认代理, 香港自动, 日本自动, 美国自动, 新国自动, 韩国自动, 台湾自动, 欧洲自动, 自动选择, 香港智能, 日本智能, 美国智能, 新国智能, 韩国智能, 台湾智能, 欧洲智能, 港区-稳定IP, 日本-稳定IP, 美国-稳定IP, 新国-稳定IP, 韩国-稳定IP, 台湾-稳定IP, 欧洲-稳定IP, 香港节点, 日本节点, 新国节点, 美国节点, 韩国节点, 台湾节点, 欧洲节点, 香港故转, 日本故转, 美国故转, 新国故转, 韩国故转, 台湾故转, 欧洲故转, 其他节点, 自建/家宽节点, 全部节点], icon: https://git.imee.me/https://github.com/Koolson/Qure/raw/master/IconSet/Color/Telegram_X.png}
+  - {name: Ai, type: select, include-all: true, proxies: [默认代理, 香港自动, 日本自动, 美国自动, 新国自动, 韩国自动, 台湾自动, 欧洲自动, 香港智能, 日本智能, 美国智能, 新国智能, 韩国智能, 台湾智能, 欧洲智能, 港区-稳定IP, 日本-稳定IP, 美国-稳定IP, 新国-稳定IP, 韩国-稳定IP, 台湾-稳定IP, 欧洲-稳定IP, 香港节点, 日本节点, 新国节点, 美国节点, 韩国节点, 台湾节点, 欧洲节点, 香港故转, 日本故转, 美国故转, 新国故转, 韩国故转, 台湾故转, 欧洲故转, 其他节点, 自建/家宽节点, 全部节点], icon: https://git.imee.me/https://github.com/Koolson/Qure/raw/master/IconSet/Color/AI.png}
+  - {name: Telegram, type: select, include-all: true, proxies: [默认代理, 香港自动, 日本自动, 美国自动, 新国自动, 韩国自动, 台湾自动, 欧洲自动, 香港智能, 日本智能, 美国智能, 新国智能, 韩国智能, 台湾智能, 欧洲智能, 港区-稳定IP, 日本-稳定IP, 美国-稳定IP, 新国-稳定IP, 韩国-稳定IP, 台湾-稳定IP, 欧洲-稳定IP, 香港节点, 日本节点, 新国节点, 美国节点, 韩国节点, 台湾节点, 欧洲节点, 香港故转, 日本故转, 美国故转, 新国故转, 韩国故转, 台湾故转, 欧洲故转, 其他节点, 自建/家宽节点, 全部节点], icon: https://git.imee.me/https://github.com/Koolson/Qure/raw/master/IconSet/Color/Telegram_X.png}
   - {name: YouTube, <<: *pr, icon: https://git.imee.me/https://github.com/Koolson/Qure/raw/master/IconSet/Color/YouTube.png}
   - {name: Google, <<: *pr, icon: https://git.imee.me/https://github.com/Koolson/Qure/raw/master/IconSet/Color/Google_Search.png}
   - {name: Twitter(X), <<: *pr, icon: https://git.imee.me/https://github.com/Koolson/Qure/raw/master/IconSet/Color/Twitter.png}
@@ -134,7 +134,7 @@ proxy-groups:
   - {name: HBO, <<: *pr, icon: https://git.imee.me/https://github.com/Koolson/Qure/raw/master/IconSet/Color/HBO.png}
   - {name: Emby, <<: *pr_c, icon: https://git.imee.me/https://github.com/Koolson/Qure/raw/master/IconSet/Color/Emby.png}
   - {name: Instagram, <<: *pr, icon: https://git.imee.me/https://github.com/Koolson/Qure/raw/master/IconSet/Color/Instagram.png}
-  - {name: WhatsApp, <<: *pr, icon: https://git.imee.me/https://github.com/Koolson/Qure/raw/master/IconSet/Color/WhatsApp.png}
+  - {name: WhatsApp, <<: *pr, icon: https://git.imee.me/https://github.com/Koolson/Qure/raw/master/IconSet/Color/WeChat.png}
   - {name: Facebook, <<: *pr, icon: https://git.imee.me/https://github.com/Koolson/Qure/raw/master/IconSet/Color/Facebook.png}
   - {name: OneDrive, <<: *pr_c, icon: https://git.imee.me/https://github.com/Koolson/Qure/raw/master/IconSet/Color/OneDrive.png}
   - {name: Microsoft, <<: *pr_c, icon: https://git.imee.me/https://github.com/Koolson/Qure/raw/master/IconSet/Color/Microsoft.png}
@@ -144,7 +144,7 @@ proxy-groups:
   - {name: Steam, <<: *pr_c, icon: https://git.imee.me/https://github.com/Koolson/Qure/raw/master/IconSet/Color/Steam.png}
   - {name: Game, <<: *pr_c, icon: https://git.imee.me/https://github.com/Koolson/Qure/raw/master/IconSet/Color/Game.png}
   - {name: Apple, <<: *pr_c, icon: https://git.imee.me/https://github.com/Koolson/Qure/raw/master/IconSet/Color/Apple.png}
-  - {name: 漏网之鱼, type: select, include-all: true, proxies: [默认代理, 香港自动, 日本自动, 美国自动, 新国自动, 韩国自动, 台湾自动, 欧洲自动, 自动选择, 香港智能, 日本智能, 美国智能, 新国智能, 韩国智能, 台湾智能, 欧洲智能, 港区-稳定IP, 日本-稳定IP, 美国-稳定IP, 新国-稳定IP, 韩国-稳定IP, 台湾-稳定IP, 欧洲-稳定IP, 香港节点, 日本节点, 新国节点, 美国节点, 韩国节点, 台湾节点, 欧洲节点, 香港故转, 日本故转, 美国故转, 新国故转, 韩国故转, 台湾故转, 欧洲故转, 其他节点, 自建/家宽节点, 全部节点], icon: https://git.imee.me/https://github.com/Koolson/Qure/raw/master/IconSet/Color/Final.png}
+  - {name: 漏网之鱼, type: select, include-all: true, proxies: [默认代理, 香港自动, 日本自动, 美国自动, 新国自动, 韩国自动, 台湾自动, 欧洲自动, 香港智能, 日本智能, 美国智能, 新国智能, 韩国智能, 台湾智能, 欧洲智能, 港区-稳定IP, 日本-稳定IP, 美国-稳定IP, 新国-稳定IP, 韩国-稳定IP, 台湾-稳定IP, 欧洲-稳定IP, 香港节点, 日本节点, 新国节点, 美国节点, 韩国节点, 台湾节点, 欧洲节点, 香港故转, 日本故转, 美国故转, 新国故转, 韩国故转, 台湾故转, 欧洲故转, 其他节点, 自建/家宽节点, 全部节点], icon: https://git.imee.me/https://github.com/Koolson/Qure/raw/master/IconSet/Color/Final.png}
 
   - {name: 香港自动, type: url-test, include-all: true, tolerance: 20, interval: 300, filter: *FilterHK, icon: https://git.imee.me/https://github.com/Koolson/Qure/raw/master/IconSet/Color/Hong_Kong.png}
   - {name: 日本自动, type: url-test, include-all: true, tolerance: 20, interval: 300, filter: *FilterJP, icon: https://git.imee.me/https://github.com/Koolson/Qure/raw/master/IconSet/Color/Japan.png}
@@ -153,7 +153,7 @@ proxy-groups:
   - {name: 韩国自动, type: url-test, include-all: true, tolerance: 20, interval: 300, filter: *FilterKR, icon: https://git.imee.me/https://github.com/Koolson/Qure/raw/master/IconSet/Color/Korea.png}
   - {name: 台湾自动, type: url-test, include-all: true, tolerance: 20, interval: 300, filter: *FilterTW, icon: https://git.imee.me/https://github.com/Koolson/Qure/raw/master/IconSet/Color/Taiwan.png}
   - {name: 欧洲自动, type: url-test, include-all: true, tolerance: 20, interval: 300, filter: *FilterEU, icon: https://git.imee.me/https://github.com/Koolson/Qure/raw/master/IconSet/Color/European_Union.png}
-  - {name: 自动选择, type: url-test, include-all: true, tolerance: 20, interval: 300, filter: *FilterAL, icon: https://git.imee.me/https://github.com/Koolson/Qure/raw/master/IconSet/Color/Round_Robin_1.png}
+  #- {name: 自动选择, type: url-test, include-all: true, tolerance: 20, interval: 300, filter: *FilterAL, icon: https://git.imee.me/https://github.com/Koolson/Qure/raw/master/IconSet/Color/Round_Robin_1.png}
   
   - {name: 香港智能, type: smart, include-all: true, tolerance: 20, interval: 300, uselightgbm: true, collectdata: true, filter: *FilterHK, url: "http://www.gstatic.com/generate_204", lazy: true, persistent: true, icon: https://git.imee.me/https://github.com/Koolson/Qure/raw/master/IconSet/Color/Hong_Kong.png}
   - {name: 日本智能, type: smart, include-all: true, tolerance: 20, interval: 300, uselightgbm: true, collectdata: true, filter: *FilterJP, url: "http://www.gstatic.com/generate_204", lazy: true, persistent: true, icon: https://git.imee.me/https://github.com/Koolson/Qure/raw/master/IconSet/Color/Japan.png}
@@ -279,4 +279,5 @@ rule-providers:
   google_ip: { <<: *ip, url: "https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geoip/google.mrs"}
   telegram_ip: { <<: *ip, url: "https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geoip/telegram.mrs"}
   netflix_ip: { <<: *ip, url: "https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geoip/netflix.mrs"}
+
 
