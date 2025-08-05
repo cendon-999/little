@@ -218,7 +218,7 @@ rules:
   - RULE-SET,GameDownload_domain-1,Game
   - RULE-SET,GameDownload_domain-2,Game
   - RULE-SET,Steam_domain,Steam
-  - RULE-SET,Games_domain,Game
+  #- RULE-SET,Games_domain,Game
   - RULE-SET,Epic_domain,Game
   - RULE-SET,Blizzard_domain,Game
   - RULE-SET,UBI_domain,Game
@@ -282,6 +282,7 @@ rule-providers:
   google_ip: { <<: *ip, url: "https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geoip/google.mrs"}
   telegram_ip: { <<: *ip, url: "https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geoip/telegram.mrs"}
   netflix_ip: { <<: *ip, url: "https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geoip/netflix.mrs"}
+
 
 
 
