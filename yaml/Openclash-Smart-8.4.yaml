@@ -138,7 +138,7 @@ proxy-groups:
   - {name: Facebook, <<: *pr, icon: https://git.imee.me/https://github.com/Koolson/Qure/raw/master/IconSet/Color/Facebook.png}
   - {name: OneDrive, <<: *pr_c, icon: https://git.imee.me/https://github.com/Koolson/Qure/raw/master/IconSet/Color/OneDrive.png}
   - {name: Microsoft, <<: *pr_c, icon: https://git.imee.me/https://github.com/Koolson/Qure/raw/master/IconSet/Color/Microsoft.png}
-  - {name: Speedtest, <<: *pr, icon: https://git.imee.me/https://github.com/Koolson/Qure/raw/master/IconSet/Color/Speedtest.png, include-all: true}
+  - {name: Speedtest, type: select, include-all: true, icon: https://git.imee.me/https://github.com/Koolson/Qure/raw/master/IconSet/Color/Speedtest.png}
   - {name: PayPal, <<: *pr, icon: https://git.imee.me/https://github.com/Koolson/Qure/raw/master/IconSet/Color/PayPal.png}
   # - {name: GameDownload, <<: *pr_c, icon: https://git.imee.me/https://github.com/Koolson/Qure/raw/master/IconSet/Color/Game.png}
   - {name: Steam, <<: *pr_c, icon: https://git.imee.me/https://github.com/Koolson/Qure/raw/master/IconSet/Color/Steam.png}
@@ -279,6 +279,7 @@ rule-providers:
   google_ip: { <<: *ip, url: "https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geoip/google.mrs"}
   telegram_ip: { <<: *ip, url: "https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geoip/telegram.mrs"}
   netflix_ip: { <<: *ip, url: "https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geoip/netflix.mrs"}
+
 
 
 
