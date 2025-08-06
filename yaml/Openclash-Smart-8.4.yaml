@@ -145,9 +145,9 @@ proxy-groups:
   - {name: Microsoft, <<: *pr_c, icon: https://git.imee.me/https://github.com/Koolson/Qure/raw/master/IconSet/Color/Microsoft.png}
   - {name: Speedtest, type: select, include-all: true, icon: https://git.imee.me/https://github.com/Koolson/Qure/raw/master/IconSet/Color/Speedtest.png}
   - {name: PayPal, <<: *pr, icon: https://git.imee.me/https://github.com/Koolson/Qure/raw/master/IconSet/Color/PayPal.png}
-  - {name: GameDownload, <<: *pr_c, icon: https://git.imee.me/https://github.com/Koolson/Qure/raw/master/IconSet/Color/Game.png}
-  - {name: Steam, <<: *pr, icon: https://git.imee.me/https://github.com/Koolson/Qure/raw/master/IconSet/Color/Steam.png}
-  - {name: Game, <<: *pr, icon: https://git.imee.me/https://github.com/Koolson/Qure/raw/master/IconSet/Color/Game.png}
+  #- {name: GameDownload, <<: *pr_c, icon: https://git.imee.me/https://github.com/Koolson/Qure/raw/master/IconSet/Color/Game.png}
+  - {name: Steam, <<: *pr_c, icon: https://git.imee.me/https://github.com/Koolson/Qure/raw/master/IconSet/Color/Steam.png}
+  - {name: Game, <<: *pr_c, icon: https://git.imee.me/https://github.com/Koolson/Qure/raw/master/IconSet/Color/Game.png}
   - {name: Apple, <<: *pr_c, icon: https://git.imee.me/https://github.com/Koolson/Qure/raw/master/IconSet/Color/Apple.png}
   - {name: 漏网之鱼, type: select, include-all: true, proxies: [默认代理, 香港自动, 日本自动, 美国自动, 新国自动, 韩国自动, 台湾自动, 欧洲自动, 香港智能, 日本智能, 美国智能, 新国智能, 韩国智能, 台湾智能, 欧洲智能, 港区-稳定IP, 日本-稳定IP, 美国-稳定IP, 新国-稳定IP, 韩国-稳定IP, 台湾-稳定IP, 欧洲-稳定IP, 香港节点, 日本节点, 新国节点, 美国节点, 韩国节点, 台湾节点, 欧洲节点, 香港故转, 日本故转, 美国故转, 新国故转, 韩国故转, 台湾故转, 欧洲故转, 其他节点, 自建/家宽节点, 全部节点], icon: https://git.imee.me/https://github.com/Koolson/Qure/raw/master/IconSet/Color/Final.png}
 
@@ -218,11 +218,14 @@ rules:
   - RULE-SET,Disney_domain,Disney
   - RULE-SET,HBO_domain,HBO
   - RULE-SET,Emby_domain-1,Emby
+  # - RULE-SET,Emby_domain-2,Emby
+  # - RULE-SET,Emby_domain-3,Emby
+  # - RULE-SET,Emby_domain-4,Emby
   - RULE-SET,Instagram_domain,Instagram
   - RULE-SET,WhatsApp_domain,WhatsApp
   - RULE-SET,Facebook_domain,Facebook
-  - RULE-SET,GameDownload_domain-1,GameDownload
-  - RULE-SET,GameDownload_domain-2,GameDownload
+  - RULE-SET,GameDownload_domain-1,Game
+  - RULE-SET,GameDownload_domain-2,Game
   - RULE-SET,Steam_domain,Steam
   - RULE-SET,Epic_domain,Game
   - RULE-SET,EA_domain,Game
@@ -274,6 +277,9 @@ rule-providers:
   netflix_domain: { <<: *domain, url: "https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geosite/netflix.mrs"}
   HBO_domain: {<<: *domain, url: "https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geosite/hbo.mrs"}
   Emby_domain-1: {<<: *class, url: "https://raw.githubusercontent.com/cendon-999/Rules/refs/heads/main/rules/Domain/emby.list"}
+  # Emby_domain-2: {<<: *class, url: "https://raw.githubusercontent.com/666OS/YYDS/refs/heads/main/mihomo/rules/emby.list"}
+  # Emby_domain-3: {<<: *class, url: "https://raw.githubusercontent.com/blackmatrix7/ios_rule_script/refs/heads/master/rule/Clash/Emby/Emby.list"}
+  # Emby_domain-4: {<<: *class, url: "https://raw.githubusercontent.com/ddgksf2013/Filter/refs/heads/master/Emby.list"}
   paypal_domain: { <<: *domain, url: "https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geosite/paypal.mrs"}
   onedrive_domain: { <<: *domain, url: "https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geosite/onedrive.mrs"}
   microsoft_domain: { <<: *domain, url: "https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geosite/microsoft.mrs"}
@@ -287,6 +293,7 @@ rule-providers:
   google_ip: { <<: *ip, url: "https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geoip/google.mrs"}
   telegram_ip: { <<: *ip, url: "https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geoip/telegram.mrs"}
   netflix_ip: { <<: *ip, url: "https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geoip/netflix.mrs"}
+
 
 
 
