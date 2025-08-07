@@ -89,12 +89,6 @@ dns:
     - '*.playstation.com'
     - '*.playstationnetwork.com'
     - '*.sonyentertainmentnetwork.com'
-    - +.qeayr.cn
-    - +.saojc.xyz
-    - +.sssyun.xyz
-    - +.dler.cloud
-    - +.0tk8a3a1q4t94dler.com
-    - +.aerianas.top
     - '*.lan'
     - '*.local'
     - 'time.*.com'
@@ -293,6 +287,7 @@ rule-providers:
   google_ip: { <<: *ip, url: "https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geoip/google.mrs"}
   telegram_ip: { <<: *ip, url: "https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geoip/telegram.mrs"}
   netflix_ip: { <<: *ip, url: "https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geoip/netflix.mrs"}
+
 
 
 
