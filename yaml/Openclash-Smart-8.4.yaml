@@ -77,13 +77,17 @@ dns:
   default-nameserver:
     - 119.29.29.29
     - 180.184.1.1
-  proxy-server-nameserver: [quic://dns.alidns.com/dns-query, https://sm2.doh.pub/dns-query]
-  direct-nameserver: [quic://dns.alidns.com/dns-query, https://sm2.doh.pub/dns-query]
+  proxy-server-nameserver: 
+    - https://dns.google/dns-query
+    - https://cloudflare-dns.com/dns-query
+  direct-nameserver:
+    - https://dns.alidns.com/dns-query
+    - https://doh.pub/dns-query 
   nameserver:
-    - 202.103.24.68
-    - 202.103.44.150
-    #- https://dns.alidns.com/dns-query
-    #- https://doh.pub/dns-query
+    #- 202.103.24.68
+    #- 202.103.44.150
+    - https://dns.alidns.com/dns-query
+    - https://doh.pub/dns-query
   fake-ip-filter:
     - '*.playstation.net'
     - '*.playstation.com'
@@ -293,6 +297,7 @@ rule-providers:
   google_ip: { <<: *ip, url: "https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geoip/google.mrs"}
   telegram_ip: { <<: *ip, url: "https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geoip/telegram.mrs"}
   netflix_ip: { <<: *ip, url: "https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geoip/netflix.mrs"}
+
 
 
 
