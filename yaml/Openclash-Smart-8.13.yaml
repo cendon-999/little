@@ -1,4 +1,3 @@
-```yaml
 # 七尺宇 + 安格世界 ， C❄️ OpenClash配置整合-23 , 2025-7-30
 # 七尺宇https://www.youtube.com/@qichiyu , 安格世界https://www.youtube.com/@Ange-Digital-Life
 # openclash设置和配置教程参：https://www.youtube.com/watch?v=S2l_0g4EOHk&t
@@ -285,6 +284,7 @@ rule-providers:
   cn_domain: { <<: *domain, url: "https://git.yylx.win/https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geosite/cn.mrs"}
   cn_ip: { <<: *ip, url: "https://git.yylx.win/https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geoip/cn.mrs"}
   google_ip: { <<: *ip, url: "https://git.yylx.win/https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geoip/google.mrs"}
+
 
 
 
