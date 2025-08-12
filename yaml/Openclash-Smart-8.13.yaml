@@ -7,35 +7,21 @@
 # ⭐️⭐️smart策略组必须要需要模型，下载下方链接内Model.bin（打开链接往下拉能看到）文件放到OpenClash: (/etc/openclash/Model.bin)，如果不想用模型：uselightgbm: true,collectdata: true,  智能策略组的这两个参数改成false
 # https://github.com/vernesong/mihomo/releases
 
+# ==================== 锚点配置 ====================
+# 代理提供者模板 - 订阅源基础配置
+BaseProvider: &BaseProvider {type: http, interval: 86400, proxy: DIRECT, health-check: {enable: true, url: 'https://www.gstatic.com/generate_204', interval: 300}, filter: '^(?!.*(群|邀请|返利|循环|官网|客服|网站|网址|获取|订阅|流量|到期|机场|下次|版本|官址|备用|过期|已用|联系|邮箱|工单|贩卖|通知|倒卖|防止|国内|地址|频道|无法|说明|使用|提示|特别|访问|支持|教程|关注|更新|作者|加入|USE|USED|TOTAL|EXPIRE|EMAIL|Panel|Channel|
+
 # 机场订阅
 proxy-providers:
-  🛫硅谷云:
-    url: "机场订阅链接A或者sub-store转换聚合后的订阅链接"
-    type: http
-    interval: 86400
-    health-check:
-      enable: true
-      url: https://www.gstatic.com/generate_204
-      interval: 300
-    proxy: 直连
-    override:
-      additional-prefix: "[🛫硅谷] " # 给此机场的节点头部加名字，引号内名字可以改。
-
-  🛫IPLC:
-    url: "机场订阅链接B"
-    type: http
-    interval: 86400
-    health-check:
-      enable: true
-      url: https://www.gstatic.com/generate_204
-      interval: 300
-    proxy: 直连
-    override:
-      additional-prefix: "[🛫IPLC] "
-
+  优质服务商: {<<: *BaseProvider, url: '优质订阅源地址1', override: {additional-prefix: '[优] '}}
+  次优服务商: {<<: *BaseProvider, url: '优质订阅源地址2', override: {additional-prefix: '[优] '}} 
+  备用服务商: {<<: *BaseProvider, url: '备用订阅源地址', override: {additional-prefix: '[备] '}}
+  聚合服务商: {<<: *BaseProvider, url: '自建订阅源地址', override: {additional-prefix: '[自建] '}}
+  落地服务商: {<<: *BaseProvider, url: '中转订阅源地址', override: {additional-prefix: '[中] ', dialer-proxy: 中转服务}}
+  
 # 节点信息
 proxies:
-  - {name: 直连, type: direct}
+  - {name: 直连, type: direct, udp: true}
 
 # 全局配置
 port: 7890
@@ -64,7 +50,7 @@ lgbm-url: https://github.com/vernesong/mihomo/releases/download/LightGBM-Model/M
 
 
 # 控制面板
-external-controller: 192.168.3.1:9090
+external-controller: 0.0.0.0:9090
 external-ui: ui
 external-ui-name: zashboard
 external-ui-url: https://github.moeyy.xyz/https://github.com/Zephyruso/zashboard/archive/refs/heads/gh-pages.zip
@@ -73,13 +59,25 @@ secret: "123456789"
 
 # DNS模块
 dns:
+  enable: true
+  listen: 0.0.0.0:7874
+  ipv6: true
+  prefer-h3: false
+  respect-rules: true
+  enhanced-mode: fake-ip
+  fake-ip-range: 198.20.0.1/16
+  default-nameserver:
+    - 119.29.29.29
+    - 180.184.1.1
+  proxy-server-nameserver: [quic://dns.alidns.com/dns-query, https://sm2.doh.pub/dns-query]
+  direct-nameserver: [quic://dns.alidns.com/dns-query, https://sm2.doh.pub/dns-query]
+  nameserver:
+    #- 202.103.24.68
+    #- 202.103.44.150
+    - https://dns.alidns.com/dns-query
+    - https://doh.pub/dns-query
+
   fake-ip-filter:
-    - +.qeayr.cn
-    - +.saojc.xyz
-    - +.sssyun.xyz
-    - +.dler.cloud
-    - +.0tk8a3a1q4t94dler.com
-    - +.aerianas.top
     - '*.lan'             # 局域网设备（如 router.lan）
     - '*.local'           # mDNS 服务（如 printer.local）
     - 'time.*.com'        # 时间服务器（如 time.apple.com）
@@ -88,6 +86,10 @@ dns:
     - '*.bt-tracker.*'    # BT Tracker 服务器
     - 'localhost'
     - '*.msftconnecttest.com' # Windows 网络检测
+    - '*.playstation.net'
+    - '*.playstation.com'
+    - '*.playstationnetwork.com'
+    - '*.sonyentertainmentnetwork.com'
 
 # 入站
 tun:
@@ -158,6 +160,7 @@ proxy-groups:
   - {name: 新国智能, type: smart, include-all: true, uselightgbm: true,collectdata: false, health-check: { enable: true, url: "https://www.gstatic.com/generate_204", interval: 60, tolerance: 2 }, interval: 300, filter: "(?=.*(广新|新加坡|SG|坡|狮城|🇸🇬|Singapore)).*$", url: "http://www.gstatic.com/generate_204", lazy: true, persistent: true}
   - {name: 韩国智能, type: smart, include-all: true, uselightgbm: true,collectdata: false, health-check: { enable: true, url: "https://www.gstatic.com/generate_204", interval: 60, tolerance: 2 }, interval: 300, filter: "(?=.*(广韩|韩国|韓國|KR|首尔|春川|🇰🇷|Korea)).*$", url: "http://www.gstatic.com/generate_204", lazy: true, persistent: true}
   - {name: 英国智能, type: smart, include-all: true, uselightgbm: true,collectdata: false, health-check: { enable: true, url: "https://www.gstatic.com/generate_204", interval: 60, tolerance: 2 }, interval: 300, filter: "(?=.*(英国|英|伦敦|UK|United Kingdom|🇬🇧|London)).*$", url: "http://www.gstatic.com/generate_204", lazy: true, persistent: true}
+  
   - {name: 香港自动, type: url-test, include-all: true, tolerance: 20, interval: 300, filter: "(?=.*(港|HK|(?i)Hong))^((?!(台|日|韩|新|深|美)).)*$"}
   - {name: 日本自动, type: url-test, include-all: true, tolerance: 20, interval: 300, filter: "(?=.*(日|JP|(?i)Japan))^((?!(港|台|韩|新|美)).)*$" }
   - {name: 美国自动, type: url-test, include-all: true, tolerance: 20, interval: 300, filter: "(?=.*(广美|美|US|纽约|波特兰|达拉斯|俄勒|凤凰城|费利蒙|拉斯|洛杉|圣何塞|圣克拉|西雅|芝加|🇺🇸|United States)).*$"}
@@ -165,6 +168,7 @@ proxy-groups:
   - {name: 韩国自动, type: url-test, include-all: true, tolerance: 20, interval: 300, filter: "(?=.*(广韩|韩国|韓國|KR|首尔|春川|🇰🇷|Korea)).*$"}
   - {name: 英国自动, type: url-test, include-all: true, tolerance: 20, interval: 300, filter: "(?=.*(英国|英|伦敦|UK|United Kingdom|🇬🇧|London)).*$"}
   - {name: 自动选择, type: url-test, include-all: true, tolerance: 20, interval: 300, filter: "^((?!(直连)).)*$"}
+  
   - {name: 香港故转, type: fallback, include-all: true, tolerance: 20, interval: 300, filter: "(?=.*(港|HK|(?i)Hong))^((?!(台|日|韩|新|深|美)).)*$"}
   - {name: 日本故转, type: fallback, include-all: true, tolerance: 20, interval: 300, filter: "(?=.*(日|JP|(?i)Japan))^((?!(港|台|韩|新|美)).)*$" }
   - {name: 美国故转, type: fallback, include-all: true, tolerance: 20, interval: 300, filter: "(?=.*(广美|美|US|纽约|波特兰|达拉斯|俄勒|凤凰城|费利蒙|拉斯|洛杉|圣何塞|圣克拉|西雅|芝加|🇺🇸|United States)).*$"}
@@ -179,6 +183,11 @@ proxy-groups:
   - {name: 韩国负载均衡, type: load-balance, strategy: round-robin, interval: 180, tolerance: 1, lazy: true, health-check: {enable: true, url: "https://www.gstatic.com/generate_204", interval: 30, tolerance: 1}, proxies: [韩国智能, 韩国自动, 韩国节点]}
   - {name: 美国负载均衡, type: load-balance, strategy: round-robin, interval: 180, tolerance: 1, lazy: true, health-check: {enable: true, url: "https://www.gstatic.com/generate_204", interval: 30, tolerance: 1}, proxies: [美国智能, 美国自动, 美国节点]}
   - {name: 英国负载均衡, type: load-balance, strategy: round-robin, interval: 180, tolerance: 1, lazy: true, health-check: {enable: true, url: "https://www.gstatic.com/generate_204", interval: 30, tolerance: 1}, proxies: [英国智能, 英国自动, 英国节点]}
+
+  - {name: 自建/家宽节点, type: select, include-all: true, filter: "(?i)(自建|The_house|home)", icon: "https://pub-8feead0908f649a8b94397f152fb9cba.r2.dev/private_node.png"}
+  - {name: 游戏节点, type: select, include-all: true, icon: https://git.imee.me/https://github.com/Koolson/Qure/raw/master/IconSet/Color/Game.png}
+
+  - {name: 中转服务, <<: *BaseLB, use: [优质服务商], filter: '香港', hidden: true, icon: https://git.imee.me/https://github.com/Koolson/Qure/raw/master/IconSet/Color/Round_Robin.png}
 
 # 规则匹配
 # 此规则部分没有做防泄露处理，因为弊严重大于利！
@@ -266,4 +275,5 @@ rule-providers:
   cn_domain: { <<: *domain, url: "https://git.yylx.win/https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geosite/cn.mrs"}
   cn_ip: { <<: *ip, url: "https://git.yylx.win/https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geoip/cn.mrs"}
   google_ip: { <<: *ip, url: "https://git.yylx.win/https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geoip/google.mrs"}
+
 
