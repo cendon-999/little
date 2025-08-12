@@ -11,6 +11,9 @@
 # 代理提供者模板 - 订阅源基础配置
 BaseProvider: &BaseProvider {type: http, interval: 86400, proxy: DIRECT, health-check: {enable: true, url: 'https://www.gstatic.com/generate_204', interval: 300}, filter: '^(?!.*(群|邀请|返利|循环|官网|客服|网站|网址|获取|订阅|流量|到期|机场|下次|版本|官址|备用|过期|已用|联系|邮箱|工单|贩卖|通知|倒卖|防止|国内|地址|频道|无法|说明|使用|提示|特别|访问|支持|教程|关注|更新|作者|加入|USE|USED|TOTAL|EXPIRE|EMAIL|Panel|Channel|
 
+# 策略组类型模板 - 定义不同的策略组基础配置
+BaseLB: &BaseLB {type: load-balance, interval: 200, lazy: true, url: 'https://www.gstatic.com/generate_204'}
+
 # 机场订阅
 proxy-providers:
   优质服务商: {<<: *BaseProvider, url: '优质订阅源地址1', override: {additional-prefix: '[优] '}}
@@ -108,9 +111,9 @@ profile:
 
 # 出站策略
 # 注意锚点必须放在引用的上方，可以集中把锚点全部放yaml的顶部。
-pr: &pr {type: select, proxies: [默认代理, 港区-稳定IP, 日本-稳定IP, 美国-稳定IP, 新国-稳定IP, 韩国-稳定IP, 英国-稳定IP, 香港智能, 日本智能, 美国智能, 新国智能, 韩国智能, 英国智能, 香港负载均衡, 日本负载均衡, 新国负载均衡, 韩国负载均衡, 美国负载均衡, 英国负载均衡 , 香港自动, 日本自动, 美国自动, 新国自动, 韩国自动, 英国自动, 自动选择, 香港故转, 日本故转, 美国故转, 新国故转, 韩国故转, 英国故转, 香港节点, 日本节点, 新国节点, 美国节点, 韩国节点, 英国节点, 其他节点, 全部节点, 直连]}
-pr_b: &pr_b {type: select, proxies: [港区-稳定IP, 日本-稳定IP, 美国-稳定IP, 新国-稳定IP, 韩国-稳定IP, 英国-稳定IP, 香港智能, 日本智能, 美国智能, 新国智能, 韩国智能, 英国智能, 香港负载均衡, 日本负载均衡, 新国负载均衡, 韩国负载均衡, 美国负载均衡, 英国负载均衡, 香港自动, 日本自动, 美国自动, 新国自动, 韩国自动, 英国自动, 自动选择, 香港故转, 日本故转, 美国故转, 新国故转, 韩国故转, 英国故转, 香港节点, 日本节点, 新国节点, 美国节点, 韩国节点, 英国节点, 其他节点, 全部节点, 直连]}
-pr_c: &pr_c {type: select, proxies: [直连, 默认代理, 港区-稳定IP, 日本-稳定IP, 美国-稳定IP, 新国-稳定IP, 韩国-稳定IP, 英国-稳定IP, 香港智能, 日本智能, 美国智能, 新国智能, 韩国智能, 英国智能, 香港负载均衡, 日本负载均衡, 新国负载均衡, 韩国负载均衡, 美国负载均衡, 英国负载均衡, 香港自动, 日本自动, 美国自动, 新国自动, 韩国自动, 英国自动, 自动选择, 香港故转, 日本故转, 美国故转, 新国故转, 韩国故转, 英国故转, 香港节点, 日本节点, 新国节点, 美国节点, 韩国节点, 英国节点, 其他节点, 全部节点]}
+pr: &pr {type: select, proxies: [默认代理, 港区-稳定IP, 日本-稳定IP, 美国-稳定IP, 新国-稳定IP, 韩国-稳定IP, 英国-稳定IP, 香港智能, 日本智能, 美国智能, 新国智能, 韩国智能, 英国智能, 香港负载均衡, 日本负载均衡, 新国负载均衡, 韩国负载均衡, 美国负载均衡, 英国负载均衡 , 香港自动, 日本自动, 美国自动, 新国自动, 韩国自动, 英国自动, 自动选择, 香港故转, 日本故转, 美国故转, 新国故转, 韩国故转, 英国故转, 香港节点, 日本节点, 新国节点, 美国节点, 韩国节点, 英国节点, 其他节点, 全部节点, 直连, 自建/家宽节点]}
+pr_b: &pr_b {type: select, proxies: [港区-稳定IP, 日本-稳定IP, 美国-稳定IP, 新国-稳定IP, 韩国-稳定IP, 英国-稳定IP, 香港智能, 日本智能, 美国智能, 新国智能, 韩国智能, 英国智能, 香港负载均衡, 日本负载均衡, 新国负载均衡, 韩国负载均衡, 美国负载均衡, 英国负载均衡, 香港自动, 日本自动, 美国自动, 新国自动, 韩国自动, 英国自动, 自动选择, 香港故转, 日本故转, 美国故转, 新国故转, 韩国故转, 英国故转, 香港节点, 日本节点, 新国节点, 美国节点, 韩国节点, 英国节点, 其他节点, 全部节点, 直连, 自建/家宽节点]}
+pr_c: &pr_c {type: select, proxies: [直连, 默认代理, 港区-稳定IP, 日本-稳定IP, 美国-稳定IP, 新国-稳定IP, 韩国-稳定IP, 英国-稳定IP, 香港智能, 日本智能, 美国智能, 新国智能, 韩国智能, 英国智能, 香港负载均衡, 日本负载均衡, 新国负载均衡, 韩国负载均衡, 美国负载均衡, 英国负载均衡, 香港自动, 日本自动, 美国自动, 新国自动, 韩国自动, 英国自动, 自动选择, 香港故转, 日本故转, 美国故转, 新国故转, 韩国故转, 英国故转, 香港节点, 日本节点, 新国节点, 美国节点, 韩国节点, 英国节点, 其他节点, 全部节点, 自建/家宽节点]}
 
 proxy-groups:
   - {name: 默认代理, <<: *pr_b}
@@ -275,5 +278,6 @@ rule-providers:
   cn_domain: { <<: *domain, url: "https://git.yylx.win/https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geosite/cn.mrs"}
   cn_ip: { <<: *ip, url: "https://git.yylx.win/https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geoip/cn.mrs"}
   google_ip: { <<: *ip, url: "https://git.yylx.win/https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geoip/google.mrs"}
+
 
 
