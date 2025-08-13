@@ -124,7 +124,7 @@ pr_c: &pr_c {type: select, proxies: [直连, 默认代理, 港区-稳定IP, 日�
 
 proxy-groups:
   - {name: 默认代理, <<: *pr_b, icon: https://git.imee.me/https://github.com/666OS/YYDS/raw/main/mihomo/image/mihomo.png}
-  - {name: Ai, <<: *pr, icon: https://git.imee.me/https://github.com/Koolson/Qure/raw/master/IconSet/Color/AI.png}
+  - {name: Ai, <<: *pr, icon: https://git.imee.me/https://github.com/Koolson/Qure/raw/master/IconSet/Color/AI.png, include-all: true}
   - {name: Telegram, <<: *pr, icon: https://git.imee.me/https://github.com/Koolson/Qure/raw/master/IconSet/Color/Telegram_X.png}
   - {name: YouTube, <<: *pr, icon: https://git.imee.me/https://github.com/Koolson/Qure/raw/master/IconSet/Color/YouTube.png}
   - {name: Google, <<: *pr, icon: https://git.imee.me/https://github.com/Koolson/Qure/raw/master/IconSet/Color/Google_Search.png}
@@ -136,7 +136,7 @@ proxy-groups:
   - {name: WhatsApp, <<: *pr, icon: https://git.imee.me/https://github.com/Koolson/Qure/raw/master/IconSet/Color/WeChat.png}
   - {name: OneDrive, <<: *pr_c, icon: https://git.imee.me/https://github.com/Koolson/Qure/raw/master/IconSet/Color/OneDrive.png}
   - {name: Microsoft, <<: *pr_c, icon: https://git.imee.me/https://github.com/Koolson/Qure/raw/master/IconSet/Color/Microsoft.png}
-  - {name: Speedtest, <<: *pr, icon: https://git.imee.me/https://github.com/Koolson/Qure/raw/master/IconSet/Color/Speedtest.png}
+  - {name: Speedtest, type: select, include-all: true, icon: https://git.imee.me/https://github.com/Koolson/Qure/raw/master/IconSet/Color/Speedtest.png}
   - {name: PayPal, <<: *pr, icon: https://git.imee.me/https://github.com/Koolson/Qure/raw/master/IconSet/Color/PayPal.png}
   - {name: GameDownload, <<: *pr_c, icon: https://git.imee.me/https://github.com/Koolson/Qure/raw/master/IconSet/Color/Game.png}
   - {name: Steam, <<: *pr, icon: https://git.imee.me/https://github.com/Koolson/Qure/raw/master/IconSet/Color/Steam.png}
@@ -289,5 +289,6 @@ rule-providers:
   cn_domain: { <<: *domain, url: "https://git.yylx.win/https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geosite/cn.mrs"}
   cn_ip: { <<: *ip, url: "https://git.yylx.win/https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geoip/cn.mrs"}
   google_ip: { <<: *ip, url: "https://git.yylx.win/https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geoip/google.mrs"}
+
 
 
